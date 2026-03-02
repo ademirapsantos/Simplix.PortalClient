@@ -38,7 +38,7 @@ services:
     environment:
       POSTGRES_DB: kmkkm_portal_client
       POSTGRES_USER: kmkkm
-      POSTGRES_PASSWORD: kmkkm123
+      POSTGRES_PASSWORD: kmkkm140813
     ports:
       - "5434:5432"
     volumes:

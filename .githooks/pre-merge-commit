@@ -1,0 +1,15 @@
+#!/bin/sh
+set -eu
+
+ALLOWED_NAME="Ademir Santos"
+ALLOWED_EMAIL="ademir574@gmail.com"
+
+CURRENT_NAME="$(git config user.name || true)"
+CURRENT_EMAIL="$(git config user.email || true)"
+
+if [ "$CURRENT_NAME" != "$ALLOWED_NAME" ] || [ "$CURRENT_EMAIL" != "$ALLOWED_EMAIL" ]; then
+  echo "Merge commit blocked."
+  echo "This repository only allows merge commits from: $ALLOWED_NAME <$ALLOWED_EMAIL>"
+  echo "Current Git identity: $CURRENT_NAME <$CURRENT_EMAIL>"
+  exit 1
+fi
