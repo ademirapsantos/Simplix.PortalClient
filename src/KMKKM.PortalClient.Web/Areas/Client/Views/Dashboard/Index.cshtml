@@ -1,0 +1,52 @@
+@model KMKKM.PortalClient.Application.Contracts.Client.ClientWorkspaceViewModel
+@{
+    ViewData["Title"] = "Area do Cliente";
+}
+
+<section class="dashboard-hero">
+    <div>
+        <span class="eyebrow">Cliente</span>
+        <h1>@Model.CustomerName</h1>
+        <p class="hero-description">Painel inicial para visualizacao das aplicacoes contratadas, upgrades, renovacoes e ordens de servico.</p>
+    </div>
+    <span class="tag">Fase 2 do roadmap</span>
+</section>
+
+<section class="workspace-grid">
+    <article class="workspace-card">
+        <h2>Aplicacoes ativas</h2>
+        <ul>
+            @foreach (var product in Model.ActiveProducts)
+            {
+                <li>@product</li>
+            }
+        </ul>
+    </article>
+    <article class="workspace-card">
+        <h2>Upgrades disponiveis</h2>
+        <ul>
+            @foreach (var upgrade in Model.AvailableUpgrades)
+            {
+                <li>@upgrade</li>
+            }
+        </ul>
+    </article>
+    <article class="workspace-card">
+        <h2>Acoes pendentes</h2>
+        <ul>
+            @foreach (var actionItem in Model.PendingActions)
+            {
+                <li>@actionItem</li>
+            }
+        </ul>
+    </article>
+    <article class="workspace-card">
+        <h2>Ordens de servico recentes</h2>
+        <ul>
+            @foreach (var ticket in Model.RecentTickets)
+            {
+                <li>@ticket</li>
+            }
+        </ul>
+    </article>
+</section>

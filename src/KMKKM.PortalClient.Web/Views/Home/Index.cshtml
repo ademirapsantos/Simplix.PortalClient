@@ -1,0 +1,91 @@
+@model KMKKM.PortalClient.Application.Contracts.Portal.LandingPageViewModel
+@{
+    ViewData["Title"] = "K.M.K.K.M Portal do Cliente";
+}
+
+<section class="hero-section">
+    <div class="hero-copy">
+        <span class="eyebrow">Startup de software e atendimento digital</span>
+        <h1>@Model.ProductName</h1>
+        <p class="hero-description">@Model.CompanySummary</p>
+        <div class="hero-actions">
+            <a class="btn btn-primary btn-lg" asp-action="Store">Explorar a Store</a>
+            <a class="btn btn-outline-light btn-lg" asp-area="Client" asp-controller="Dashboard" asp-action="Index">Area do Cliente</a>
+        </div>
+    </div>
+    <div class="hero-panel">
+        <p class="hero-panel-title">Primeira fase do MVP</p>
+        <ul>
+            @foreach (var highlight in Model.Highlights)
+            {
+                <li>@highlight</li>
+            }
+        </ul>
+    </div>
+</section>
+
+<section class="section-grid">
+    <article class="section-card">
+        <h2>Quem somos</h2>
+        <p>@Model.AboutCompany</p>
+    </article>
+    <article class="section-card">
+        <h2>Estrutura inicial</h2>
+        <p>Portal publico, K.M.K.K.M Store, area do cliente, chamados, chat e administracao comercial e de suporte em uma unica solution.</p>
+    </article>
+</section>
+
+<section class="section-block">
+    <div class="section-heading">
+        <h2>Aplicacoes em destaque</h2>
+        <a asp-action="Store">Ver catalogo completo</a>
+    </div>
+    <div class="card-grid">
+        @foreach (var application in Model.FeaturedApplications)
+        {
+            <article class="product-card">
+                <span class="product-badge">@application.Category</span>
+                <h3>@application.Name</h3>
+                <p>@application.Description</p>
+                <div class="card-footer">
+                    <span>@application.Positioning</span>
+                    <span>@application.Status</span>
+                </div>
+            </article>
+        }
+    </div>
+</section>
+
+<section class="section-block">
+    <div class="section-heading">
+        <h2>Planos comerciais</h2>
+        <span>Venda de licencas, upgrades e contratacao recorrente</span>
+    </div>
+    <div class="pricing-grid">
+        @foreach (var plan in Model.CommercialPlans)
+        {
+            <article class="pricing-card">
+                <h3>@plan.Name</h3>
+                <p>@plan.Description</p>
+                <strong>@plan.TargetAudience</strong>
+            </article>
+        }
+    </div>
+</section>
+
+<section class="section-block">
+    <div class="section-heading">
+        <h2>Roadmap imediato</h2>
+        <span>Construindo na ordem correta para reduzir retrabalho</span>
+    </div>
+    <div class="roadmap-grid">
+        @foreach (var item in Model.Roadmap)
+        {
+            <article class="roadmap-card">
+                <span class="roadmap-step">@item.StepNumber.ToString("00")</span>
+                <h3>@item.Title</h3>
+                <p>@item.Description</p>
+            </article>
+        }
+    </div>
+</section>
