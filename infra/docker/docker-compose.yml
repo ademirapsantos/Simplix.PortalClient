@@ -63,6 +63,11 @@ services:
       UPDATE_TARGET_VERSION: 0.1.0
       UPDATE_CHANNEL: stable
       UPDATE_REQUIRES_ADMIN_APPROVAL: "true"
+      UPDATE_GIT_PROVIDER: github
+      UPDATE_GIT_REPOSITORY: your-org/kmkkm_PortalClient
+      UPDATE_GIT_BRANCH: main
+      UPDATE_CURRENT_COMMIT: local-dev
+      UPDATE_GIT_TOKEN: ""
     ports:
       - "8081:8081"
     healthcheck:
