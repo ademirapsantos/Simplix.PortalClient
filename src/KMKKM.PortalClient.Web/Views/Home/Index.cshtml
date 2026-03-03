@@ -3,68 +3,127 @@
     ViewData["Title"] = "K.M.K.K.M Portal do Cliente";
 }
 
-<section class="hero-section">
-    <div class="hero-copy">
-        <span class="eyebrow">Startup de software e atendimento digital</span>
+<section class="landing-hero">
+    <div class="hero-copy hero-copy-main">
+        <span class="eyebrow">Portal publico, store e operacao do cliente em um unico ecossistema</span>
         <h1>@Model.ProductName</h1>
-        <p class="hero-description">@Model.CompanySummary</p>
+        <p class="hero-description hero-description-strong">@Model.CompanySummary</p>
+        <p class="hero-support">@Model.AboutCompany</p>
         <div class="hero-actions">
-            <a class="btn btn-primary btn-lg" asp-action="Store">Explorar a Store</a>
-            <a class="btn btn-outline-light btn-lg" asp-area="Client" asp-controller="Dashboard" asp-action="Index">Area do Cliente</a>
+            <a class="btn btn-primary btn-lg" asp-action="Store">Conhecer solucoes</a>
+            <a class="btn btn-outline-light btn-lg" asp-controller="Account" asp-action="Login">Entrar no portal</a>
         </div>
-    </div>
-    <div class="hero-panel">
-        <p class="hero-panel-title">Primeira fase do MVP</p>
-        <ul>
+        <div class="hero-signal-grid">
             @foreach (var highlight in Model.Highlights)
             {
-                <li>@highlight</li>
+                <article class="signal-card">
+                    <span class="signal-icon"></span>
+                    <p>@highlight</p>
+                </article>
             }
-        </ul>
+        </div>
     </div>
-</section>
-
-<section class="section-grid">
-    <article class="section-card">
-        <h2>Quem somos</h2>
-        <p>@Model.AboutCompany</p>
-    </article>
-    <article class="section-card">
-        <h2>Estrutura inicial</h2>
-        <p>Portal publico, K.M.K.K.M Store, area do cliente, chamados, chat e administracao comercial e de suporte em uma unica solution.</p>
-    </article>
+    <aside class="hero-showcase">
+        <div class="hero-showcase-card hero-showcase-primary">
+            <span class="tag">Experiencia unificada</span>
+            <h2>Do primeiro contato ate o suporte continuo</h2>
+            <p>Uma pagina inicial comercial para apresentar a empresa, a store para explorar os produtos e uma area reservada para relacionamento pos-venda.</p>
+        </div>
+        <div class="hero-showcase-stack">
+            <article class="hero-showcase-card">
+                <span class="showcase-label">Publico</span>
+                <strong>Landing institucional</strong>
+                <p>Mensagem clara, valor da marca e entrada direta para catalogo e login.</p>
+            </article>
+            <article class="hero-showcase-card">
+                <span class="showcase-label">Operacao</span>
+                <strong>Store + area do cliente</strong>
+                <p>Licencas, upgrades, chamados e acompanhamento centralizados.</p>
+            </article>
+        </div>
+    </aside>
 </section>
 
 <section class="section-block">
     <div class="section-heading">
-        <h2>Aplicacoes em destaque</h2>
-        <a asp-action="Store">Ver catalogo completo</a>
+        <div>
+            <span class="section-kicker">Caminhos de entrada</span>
+            <h2>Escolha o proximo passo</h2>
+        </div>
+        <a asp-action="Store">Ver experiencias disponiveis</a>
+    </div>
+    <div class="journey-grid">
+        <article class="journey-card">
+            <span class="tag">Descoberta</span>
+            <h3>Quero conhecer os aplicativos</h3>
+            <p>Use a Store para ver categorias, posicionamento dos produtos e o status comercial de cada solucao.</p>
+            <a asp-action="Store">Ir para a Store</a>
+        </article>
+        <article class="journey-card">
+            <span class="tag">Cliente</span>
+            <h3>Ja sou cliente e preciso acessar</h3>
+            <p>Entre no portal para acompanhar licencas, upgrades, atendimentos e a operacao contratada.</p>
+            <a asp-area="Client" asp-controller="Dashboard" asp-action="Index">Abrir area do cliente</a>
+        </article>
+        <article class="journey-card">
+            <span class="tag">Gestao</span>
+            <h3>Quero acompanhar a evolucao da plataforma</h3>
+            <p>Visualize a estrutura planejada para a camada publica, operacao comercial, suporte e administracao.</p>
+            <a href="#roadmap">Ver roadmap</a>
+        </article>
+    </div>
+</section>
+
+<section class="section-block">
+    <div class="section-heading">
+        <div>
+            <span class="section-kicker">Aplicacoes em destaque</span>
+            <h2>Produtos apresentados com foco comercial</h2>
+        </div>
+        <a asp-action="Store">Catalogo completo</a>
     </div>
     <div class="card-grid">
         @foreach (var application in Model.FeaturedApplications)
         {
-            <article class="product-card">
+            <article class="product-card product-card-featured">
                 <span class="product-badge">@application.Category</span>
                 <h3>@application.Name</h3>
                 <p>@application.Description</p>
-                <div class="card-footer">
+                <div class="card-footer card-footer-column">
                     <span>@application.Positioning</span>
-                    <span>@application.Status</span>
+                    <strong>@application.Status</strong>
                 </div>
             </article>
         }
     </div>
 </section>
 
+<section class="section-grid section-grid-emphasis">
+    <article class="section-card section-card-blue">
+        <span class="section-kicker">Como a K.M.K.K.M aparece</span>
+        <h2>Uma home com cara de produto, nao de painel tecnico</h2>
+        <p>@Model.AboutCompany</p>
+    </article>
+    <article class="section-card">
+        <span class="section-kicker">Estrutura inicial</span>
+        <h2>Base pronta para crescer sem quebrar a experiencia</h2>
+        <p>Portal publico, K.M.K.K.M Store, area do cliente, chamados, chat e administracao comercial e de suporte em uma unica solution.</p>
+    </article>
+</section>
+
 <section class="section-block">
     <div class="section-heading">
-        <h2>Planos comerciais</h2>
-        <span>Venda de licencas, upgrades e contratacao recorrente</span>
+        <div>
+            <span class="section-kicker">Planos comerciais</span>
+            <h2>Formatos de venda pensados para perfis diferentes</h2>
+        </div>
+        <span>Licencas, upgrades e contratacao recorrente</span>
     </div>
     <div class="pricing-grid">
         @foreach (var plan in Model.CommercialPlans)
         {
             <article class="pricing-card">
+                <span class="tag">Plano</span>
                 <h3>@plan.Name</h3>
                 <p>@plan.Description</p>
                 <strong>@plan.TargetAudience</strong>
@@ -73,10 +132,13 @@
     </div>
 </section>
 
-<section class="section-block">
+<section class="section-block" id="roadmap">
     <div class="section-heading">
-        <h2>Roadmap imediato</h2>
-        <span>Construindo na ordem correta para reduzir retrabalho</span>
+        <div>
+            <span class="section-kicker">Roadmap imediato</span>
+            <h2>Entrega em fases para reduzir retrabalho</h2>
+        </div>
+        <span>Construindo na ordem correta</span>
     </div>
     <div class="roadmap-grid">
         @foreach (var item in Model.Roadmap)
