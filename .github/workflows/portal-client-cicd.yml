@@ -136,4 +136,4 @@ jobs:
           DEPLOY_ENV: ${{ needs.version.outputs.deploy_env }}
           IMAGE_TAG: ${{ needs.version.outputs.image_tag }}
           REGISTRY_IMAGE: ${{ env.REGISTRY }}/${{ needs.version.outputs.image_name }}
-        run: ./scripts/ci/deploy-container.sh
+        run: bash ./scripts/ci/deploy-container.sh
