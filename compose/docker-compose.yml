@@ -3,6 +3,7 @@ name: ${COMPOSE_PROJECT_NAME}
 services:
   app:
     container_name: ${APP_NAME}
+    image: ${REGISTRY_IMAGE:-ghcr.io/ademirapsantos/kmkkm_portalclient/portal-client-app}:${IMAGE_TAG:-dev}
     build:
       context: ..
       dockerfile: src/KMKKM.PortalClient.Web/Dockerfile

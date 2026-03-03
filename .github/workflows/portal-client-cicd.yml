@@ -134,6 +134,9 @@ jobs:
           REMOTE_USER: ${{ secrets.DEPLOY_USER }}
           REMOTE_PATH: ${{ secrets.DEPLOY_PATH }}
           DEPLOY_ENV: ${{ needs.version.outputs.deploy_env }}
+          REGISTRY: ${{ env.REGISTRY }}
           IMAGE_TAG: ${{ needs.version.outputs.image_tag }}
           REGISTRY_IMAGE: ${{ env.REGISTRY }}/${{ needs.version.outputs.image_name }}
+          REGISTRY_USERNAME: ${{ secrets.REGISTRY_USERNAME }}
+          REGISTRY_PASSWORD: ${{ secrets.REGISTRY_PASSWORD }}
         run: bash ./scripts/ci/deploy-container.sh
