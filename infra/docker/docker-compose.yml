@@ -31,6 +31,7 @@ services:
     restart: unless-stopped
     networks:
       - kmkkm-backbone
+      - proxy
 
   postgres:
     container_name: kmkkm-postgres
@@ -104,6 +105,8 @@ services:
 networks:
   kmkkm-backbone:
     driver: bridge
+  proxy:
+    external: true
 
 volumes:
   postgres-data:

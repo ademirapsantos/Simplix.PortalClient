@@ -76,6 +76,22 @@ a {
   font-weight: 600;
 }
 
+.nav-user,
+.nav-button {
+  font-weight: 600;
+  color: var(--brand-dark);
+}
+
+.nav-button {
+  background: transparent;
+  border: 0;
+  padding: 0;
+}
+
+.logout-form {
+  margin: 0;
+}
+
 main.shell-width {
   padding: 2rem 1.25rem 4rem;
 }
@@ -120,6 +136,11 @@ main.shell-width {
   font-weight: 700;
   letter-spacing: 0.04em;
   text-transform: uppercase;
+}
+
+.tag-alert {
+  background: rgba(217, 164, 65, 0.2);
+  color: #8a5200;
 }
 
 .hero-copy h1 {
@@ -207,6 +228,28 @@ main.shell-width {
   background: rgba(255, 250, 244, 0.86);
 }
 
+.auth-shell {
+  display: grid;
+  grid-template-columns: 1.4fr 1fr;
+  gap: 1.25rem;
+  padding: 2rem 0;
+}
+
+.auth-card,
+.auth-aside {
+  padding: 2rem;
+  border: 1px solid var(--line);
+  border-radius: 24px;
+  background: rgba(255, 250, 244, 0.92);
+  box-shadow: var(--shadow);
+}
+
+.auth-form {
+  display: grid;
+  gap: 1rem;
+  margin-top: 1.5rem;
+}
+
 @media (max-width: 991px) {
   .hero-section,
   .section-grid,
@@ -214,7 +257,8 @@ main.shell-width {
   .pricing-grid,
   .roadmap-grid,
   .workspace-grid,
-  .stats-grid {
+  .stats-grid,
+  .auth-shell {
     grid-template-columns: 1fr;
   }
 

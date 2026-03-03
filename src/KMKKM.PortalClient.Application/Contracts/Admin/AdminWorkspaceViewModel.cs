@@ -5,4 +5,5 @@ public sealed record AdminWorkspaceViewModel(
     IReadOnlyCollection<AdminMetricViewModel> SalesMetrics,
     IReadOnlyCollection<AdminMetricViewModel> SupportMetrics,
     IReadOnlyCollection<string> PriorityQueues,
-    OpenClawStatusViewModel OpenClawStatus);
+    OpenClawStatusViewModel OpenClawStatus,
+    SystemUpdateStatusViewModel SystemUpdateStatus);

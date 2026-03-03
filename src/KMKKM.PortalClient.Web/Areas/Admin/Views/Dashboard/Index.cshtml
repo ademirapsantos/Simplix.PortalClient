@@ -1,6 +1,7 @@
 @model KMKKM.PortalClient.Application.Contracts.Admin.AdminWorkspaceViewModel
 @{
     ViewData["Title"] = "Admin";
+    bool canManageSystemUpdate = ViewBag.CanManageSystemUpdate is true;
 }
 
 <section class="dashboard-hero">
@@ -11,6 +12,34 @@
     </div>
     <span class="tag">@Model.OpenClawStatus.Mode</span>
 </section>
+
+@if (canManageSystemUpdate)
+{
+    <section class="section-block">
+        <div class="section-heading">
+            <h2>Atualizacao do sistema</h2>
+            <span>@Model.SystemUpdateStatus.Channel</span>
+        </div>
+        <article class="workspace-card">
+            @if (Model.SystemUpdateStatus.HasPendingUpdate)
+            {
+                <span class="tag tag-alert">Atualizacao pendente</span>
+            }
+            else
+            {
+                <span class="tag">Sem pendencias</span>
+            }
+
+            <h3>Versao atual: @Model.SystemUpdateStatus.CurrentVersion</h3>
+            <p>@Model.SystemUpdateStatus.Summary</p>
+            <ul>
+                <li>Versao alvo: @Model.SystemUpdateStatus.TargetVersion</li>
+                <li>Aprovacao do Admin: @(Model.SystemUpdateStatus.RequiresAdminApproval ? "Obrigatoria" : "Nao obrigatoria")</li>
+                <li>Servico de update: @(Model.SystemUpdateStatus.IsAvailable ? "Disponivel" : "Indisponivel")</li>
+            </ul>
+        </article>
+    </section>
+}
 
 <section class="section-block">
     <div class="section-heading">

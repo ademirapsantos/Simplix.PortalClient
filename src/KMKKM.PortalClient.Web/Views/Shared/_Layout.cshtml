@@ -19,6 +19,18 @@
                 <a asp-area="" asp-controller="Home" asp-action="Store">Store</a>
                 <a asp-area="Client" asp-controller="Dashboard" asp-action="Index">Area do Cliente</a>
                 <a asp-area="Admin" asp-controller="Dashboard" asp-action="Index">Admin</a>
+                @if (User.Identity?.IsAuthenticated == true)
+                {
+                    <span class="nav-user">@User.Identity.Name</span>
+                    <form method="post" asp-controller="Account" asp-action="Logout" class="logout-form">
+                        @Html.AntiForgeryToken()
+                        <button type="submit" class="nav-button">Sair</button>
+                    </form>
+                }
+                else
+                {
+                    <a asp-controller="Account" asp-action="Login">Entrar</a>
+                }
             </nav>
         </div>
     </header>

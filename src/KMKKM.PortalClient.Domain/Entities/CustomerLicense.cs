@@ -2,9 +2,9 @@ namespace KMKKM.PortalClient.Domain.Entities;
 
 public sealed class CustomerLicense
 {
-    public Guid Id { get; init; } = Guid.NewGuid();
-    public string CustomerName { get; init; } = string.Empty;
-    public string ProductName { get; init; } = string.Empty;
-    public string PlanName { get; init; } = string.Empty;
-    public DateOnly ExpiresOn { get; init; }
+    public Guid Id { get; set; } = Guid.NewGuid();
+    public string CustomerName { get; set; } = string.Empty;
+    public string ProductName { get; set; } = string.Empty;
+    public string PlanName { get; set; } = string.Empty;
+    public DateOnly ExpiresOn { get; set; }
 }
