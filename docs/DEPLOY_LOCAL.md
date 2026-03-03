@@ -73,7 +73,8 @@ docker compose --env-file compose/.env.prd -f compose/docker-compose.yml -f comp
 
 ## Observacoes
 
-- Preencha `POSTGRES_PASSWORD` e `UPDATE_GIT_TOKEN` antes de subir cada ambiente.
+- Preencha `POSTGRES_PASSWORD`, `UPDATE_GIT_TOKEN` e as senhas de seed `SEED_ADMIN_PASSWORD`, `SEED_SALES_PASSWORD`, `SEED_SUPPORT_PASSWORD`, `SEED_CLIENT_PASSWORD` antes de subir cada ambiente.
 - Ajuste `UPDATE_GIT_REPOSITORY` para o repositorio real.
+- Ajuste `PORTAL_PUBLIC_ORIGIN` para a URL publica do portal. O fluxo de reset de senha usa esse valor para gerar links corretos atras do proxy.
 - O Nginx Proxy Manager deve apontar para o container `app` na rede `proxy`, usando a porta interna `8080`.
 - Os nomes dos containers e do volume do PostgreSQL variam por ambiente para evitar conflito.

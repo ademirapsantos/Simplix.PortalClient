@@ -5,6 +5,7 @@ using KMKKM.PortalClient.Infrastructure.Persistence;
 using KMKKM.PortalClient.Infrastructure.Services;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Http;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -19,6 +20,10 @@ public static class InfrastructureServiceCollectionExtensions
         services.Configure<OpenClawOptions>(configuration.GetSection(OpenClawOptions.SectionName));
         services.Configure<UpdateServerOptions>(configuration.GetSection(UpdateServerOptions.SectionName));
         services.Configure<SeedUsersOptions>(configuration.GetSection(SeedUsersOptions.SectionName));
+        services.Configure<PasswordResetOptions>(configuration.GetSection(PasswordResetOptions.SectionName));
+
+        PasswordResetOptions passwordResetOptions =
+            configuration.GetSection(PasswordResetOptions.SectionName).Get<PasswordResetOptions>() ?? new PasswordResetOptions();
 
         string connectionString = configuration.GetConnectionString("Postgres")
             ?? throw new InvalidOperationException("Connection string 'Postgres' was not configured.");
@@ -51,19 +56,37 @@ public static class InfrastructureServiceCollectionExtensions
                 options.Password.RequireDigit = true;
                 options.Password.RequireLowercase = true;
                 options.Password.RequireUppercase = true;
-                options.Password.RequireNonAlphanumeric = false;
-                options.Password.RequiredLength = 8;
+                options.Password.RequireNonAlphanumeric = true;
+                options.Password.RequiredLength = 12;
+                options.Password.RequiredUniqueChars = 4;
                 options.User.RequireUniqueEmail = true;
                 options.SignIn.RequireConfirmedAccount = false;
+                options.Lockout.AllowedForNewUsers = true;
+                options.Lockout.DefaultLockoutTimeSpan = TimeSpan.FromMinutes(15);
+                options.Lockout.MaxFailedAccessAttempts = 5;
             })
             .AddEntityFrameworkStores<PortalClientDbContext>()
             .AddDefaultTokenProviders();
 
+        services.Configure<DataProtectionTokenProviderOptions>(options =>
+        {
+            options.TokenLifespan = TimeSpan.FromMinutes(Math.Max(5, passwordResetOptions.TokenLifespanMinutes));
+        });
+
+        services.Configure<SecurityStampValidatorOptions>(options =>
+        {
+            options.ValidationInterval = TimeSpan.FromMinutes(5);
+        });
+
         services.ConfigureApplicationCookie(options =>
         {
             options.Cookie.Name = "KMKKM.PortalClient.Auth";
+            options.Cookie.HttpOnly = true;
+            options.Cookie.SameSite = SameSiteMode.Lax;
+            options.Cookie.SecurePolicy = CookieSecurePolicy.Always;
             options.LoginPath = "/account/login";
             options.AccessDeniedPath = "/account/access-denied";
+            options.ExpireTimeSpan = TimeSpan.FromHours(8);
             options.SlidingExpiration = true;
             options.Events = new CookieAuthenticationEvents
             {
@@ -75,9 +98,11 @@ public static class InfrastructureServiceCollectionExtensions
             };
         });
 
+        services.AddHttpContextAccessor();
         services.AddScoped<IPortalExperienceService, PortalExperienceService>();
         services.AddScoped<IClientWorkspaceService, ClientWorkspaceService>();
         services.AddScoped<IAdminWorkspaceService, AdminWorkspaceService>();
+        services.AddScoped<ISecurityAuditService, SecurityAuditService>();
         services.AddHostedService<PortalClientDbContextInitializer>();
 
         return services;

@@ -22,6 +22,7 @@
                 @if (User.Identity?.IsAuthenticated == true)
                 {
                     <span class="nav-user">@User.Identity.Name</span>
+                    <a asp-controller="Account" asp-action="ChangePassword">Senha</a>
                     <form method="post" asp-controller="Account" asp-action="Logout" class="logout-form">
                         @Html.AntiForgeryToken()
                         <button type="submit" class="nav-button">Sair</button>

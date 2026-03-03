@@ -170,7 +170,7 @@ internal sealed class PortalClientDbContextInitializer : IHostedService
         SeedUserCredentialsOptions credentials,
         string roleName)
     {
-        if (string.IsNullOrWhiteSpace(credentials.Email) || string.IsNullOrWhiteSpace(credentials.Password))
+        if (string.IsNullOrWhiteSpace(credentials.Email))
         {
             return;
         }
@@ -178,6 +178,12 @@ internal sealed class PortalClientDbContextInitializer : IHostedService
         var user = await userManager.FindByEmailAsync(credentials.Email);
         if (user is null)
         {
+            if (string.IsNullOrWhiteSpace(credentials.Password))
+            {
+                throw new InvalidOperationException(
+                    $"Seed user '{credentials.Email}' is missing a password. Configure it via environment variable or user secrets.");
+            }
+
             user = new ApplicationUser
             {
                 Id = Guid.NewGuid(),

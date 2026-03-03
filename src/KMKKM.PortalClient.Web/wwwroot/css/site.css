@@ -250,6 +250,10 @@ main.shell-width {
   margin-top: 1.5rem;
 }
 
+.auth-link {
+  font-weight: 600;
+}
+
 @media (max-width: 991px) {
   .hero-section,
   .section-grid,

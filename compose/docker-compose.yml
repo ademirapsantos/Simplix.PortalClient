@@ -12,6 +12,12 @@ services:
       UpdateServer__BaseUrl: http://update:8081
       UpdateServer__CurrentChannel: ${UPDATE_CHANNEL}
       UpdateServer__EnableAutoUpdatePrompt: ${UPDATE_ENABLE_AUTO_UPDATE_PROMPT}
+      SeedUsers__Admin__Password: ${SEED_ADMIN_PASSWORD}
+      SeedUsers__Sales__Password: ${SEED_SALES_PASSWORD}
+      SeedUsers__Support__Password: ${SEED_SUPPORT_PASSWORD}
+      SeedUsers__Client__Password: ${SEED_CLIENT_PASSWORD}
+      PasswordReset__Enabled: ${PASSWORD_RESET_ENABLED:-true}
+      PasswordReset__PublicOrigin: ${PORTAL_PUBLIC_ORIGIN}
     expose:
       - "8080"
     depends_on:
