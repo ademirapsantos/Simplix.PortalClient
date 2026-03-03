@@ -14,7 +14,6 @@ permissions:
 
 env:
   REGISTRY: ghcr.io
-  IMAGE_NAME: ${{ github.repository }}/portal-client-app
 
 jobs:
   version:
@@ -28,6 +27,7 @@ jobs:
       short_sha: ${{ steps.meta.outputs.short_sha }}
       deploy_env: ${{ steps.branch.outputs.deploy_env }}
       git_branch: ${{ steps.branch.outputs.git_branch }}
+      image_name: ${{ steps.image.outputs.image_name }}
     steps:
       - uses: actions/checkout@v4
         with:
@@ -43,6 +43,11 @@ jobs:
             *) echo "deploy_env=dev" >> "$GITHUB_OUTPUT" ;;
           esac
           echo "git_branch=$BRANCH_NAME" >> "$GITHUB_OUTPUT"
+
+      - id: image
+        shell: bash
+        run: |
+          echo "image_name=${GITHUB_REPOSITORY,,}/portal-client-app" >> "$GITHUB_OUTPUT"
 
       - id: meta
         shell: pwsh
@@ -100,8 +105,8 @@ jobs:
           file: ./src/KMKKM.PortalClient.Web/Dockerfile
           push: true
           tags: |
-            ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:${{ needs.version.outputs.image_tag }}
-            ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:${{ needs.version.outputs.git_branch }}
+            ${{ env.REGISTRY }}/${{ needs.version.outputs.image_name }}:${{ needs.version.outputs.image_tag }}
+            ${{ env.REGISTRY }}/${{ needs.version.outputs.image_name }}:${{ needs.version.outputs.git_branch }}
           build-args: |
             APP_VERSION=${{ needs.version.outputs.version }}
             SOURCE_REVISION=${{ github.sha }}
@@ -130,5 +135,5 @@ jobs:
           REMOTE_PATH: ${{ secrets.DEPLOY_PATH }}
           DEPLOY_ENV: ${{ needs.version.outputs.deploy_env }}
           IMAGE_TAG: ${{ needs.version.outputs.image_tag }}
-          REGISTRY_IMAGE: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}
+          REGISTRY_IMAGE: ${{ env.REGISTRY }}/${{ needs.version.outputs.image_name }}
         run: ./scripts/ci/deploy-container.sh
