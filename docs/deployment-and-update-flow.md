@@ -49,7 +49,8 @@ Os demais usuarios nao devem ver prompt de atualizacao.
 
 ## Ajustes necessarios antes de producao
 
-- trocar `your-org/simplix_PortalClient` pelo repositorio real
+- trocar `your-org/Simplix.PortalClient` pelo repositorio real
 - definir os environments `dev`, `hmg` e `prd` no GitHub
 - configurar secrets por ambiente
 - substituir o deploy shell basico pelo procedimento definitivo da VPS
+
