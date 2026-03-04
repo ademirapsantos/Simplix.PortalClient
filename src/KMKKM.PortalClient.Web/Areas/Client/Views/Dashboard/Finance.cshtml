@@ -1,0 +1,239 @@
+@model KMKKM.PortalClient.Application.Contracts.Client.ClientWorkspaceViewModel
+@{
+    ViewData["Title"] = "Financeiro";
+    ViewData["UseWideShell"] = true;
+    ViewData["ClientSection"] = "finance";
+
+    var allEntries = Model.FinancialHistory
+        .OrderByDescending(x => x.DueOn)
+        .ToArray();
+
+    var openEntries = allEntries
+        .Where(x => !string.Equals(x.Status, "Pago", StringComparison.OrdinalIgnoreCase))
+        .OrderBy(x => x.DueOn)
+        .ToArray();
+
+    var paidEntries = allEntries
+        .Where(x => string.Equals(x.Status, "Pago", StringComparison.OrdinalIgnoreCase))
+        .OrderByDescending(x => x.PaidOn ?? x.DueOn)
+        .ToArray();
+
+    var overdueEntries = openEntries
+        .Where(x => string.Equals(x.Status, "Vencido", StringComparison.OrdinalIgnoreCase))
+        .ToArray();
+
+    var pendingEntries = openEntries
+        .Where(x => string.Equals(x.Status, "Pendente", StringComparison.OrdinalIgnoreCase))
+        .ToArray();
+
+    var nextDue = openEntries.FirstOrDefault();
+    var openAmount = openEntries.Sum(x => x.Amount);
+    var paidAmount = paidEntries.Sum(x => x.Amount);
+    var latestPayment = paidEntries.FirstOrDefault();
+    var primaryPaymentMethod = allEntries
+        .GroupBy(x => x.PaymentMethod)
+        .OrderByDescending(x => x.Count())
+        .Select(x => x.Key)
+        .FirstOrDefault() ?? "Nao informado";
+}
+
+<div class="client-account-shell">
+    <partial name="~/Areas/Client/Views/Shared/_AccountSidebar.cshtml" model="Model" />
+
+    <div class="client-account-content finance-page">
+        <section class="client-account-header">
+            <div>
+                <p class="client-account-kicker">Financeiro</p>
+                <h1>Financeiro</h1>
+            </div>
+
+            <div class="client-account-actions">
+                <article class="client-summary-card">
+                    <span class="client-summary-icon">R$</span>
+                    <div>
+                        <strong>@openAmount.ToString("C") em aberto</strong>
+                        <p>@openEntries.Length cobranca(s) aguardando pagamento ou baixa.</p>
+                    </div>
+                </article>
+
+                <article class="client-summary-card">
+                    <span class="client-summary-icon">OK</span>
+                    <div>
+                        <strong>@(latestPayment?.Amount.ToString("C") ?? "Sem baixa")</strong>
+                        <p>@(latestPayment is null ? "Nenhum pagamento confirmado ainda." : $"Ultimo pagamento em {(latestPayment.PaidOn ?? latestPayment.DueOn):dd/MM/yyyy}")</p>
+                    </div>
+                </article>
+            </div>
+        </section>
+
+        <section class="finance-overview-grid">
+            <article class="finance-hero-card">
+                <div class="finance-hero-header">
+                    <div>
+                        <span class="finance-kicker">Situacao financeira</span>
+                        <h2>Controle de cobrancas e conciliacao</h2>
+                    </div>
+                    <span class="ticket-chip @(overdueEntries.Length > 0 ? "financial-status-vencido" : "financial-status-pago")">
+                        @(overdueEntries.Length > 0 ? "Requer atencao" : "Em dia")
+                    </span>
+                </div>
+
+                <div class="finance-hero-stats">
+                    <div class="finance-hero-stat">
+                        <span>Em aberto</span>
+                        <strong>@openAmount.ToString("C")</strong>
+                    </div>
+                    <div class="finance-hero-stat">
+                        <span>Pago no historico</span>
+                        <strong>@paidAmount.ToString("C")</strong>
+                    </div>
+                    <div class="finance-hero-stat">
+                        <span>Proximo vencimento</span>
+                        <strong>@(nextDue?.DueOn.ToString("dd/MM/yyyy") ?? "Sem pendencias")</strong>
+                    </div>
+                </div>
+
+                <div class="finance-hero-strip">
+                    <div class="finance-hero-strip-item">
+                        <span>Cobrancas pendentes</span>
+                        <strong>@pendingEntries.Length</strong>
+                    </div>
+                    <div class="finance-hero-strip-item">
+                        <span>Cobrancas vencidas</span>
+                        <strong>@overdueEntries.Length</strong>
+                    </div>
+                    <div class="finance-hero-strip-item">
+                        <span>Forma principal</span>
+                        <strong>@primaryPaymentMethod</strong>
+                    </div>
+                </div>
+            </article>
+
+            <article class="finance-side-card">
+                <div class="section-heading section-heading-compact">
+                    <h2>Acoes recomendadas</h2>
+                    <span>Prioridades</span>
+                </div>
+                <ul class="action-list">
+                    @if (overdueEntries.Length > 0)
+                    {
+                        <li>Regularizar @overdueEntries.Length cobranca(s) vencida(s) para evitar bloqueios operacionais.</li>
+                    }
+                    @if (pendingEntries.Length > 0)
+                    {
+                        <li>Conferir @pendingEntries.Length pagamento(s) ainda em aberto antes do proximo ciclo.</li>
+                    }
+                    <li>Validar se o metodo de pagamento principal deve continuar como @primaryPaymentMethod.</li>
+                    <li>Revisar historico e conciliacao antes da proxima renovacao contratual.</li>
+                </ul>
+            </article>
+        </section>
+
+        <section class="subscription-section">
+            <div class="subscription-section-heading">
+                <h2>Cobrancas em aberto</h2>
+                <p>Itens que exigem pagamento, baixa ou revisao operacional.</p>
+            </div>
+
+            <div class="finance-list-card">
+                @if (openEntries.Length == 0)
+                {
+                    <article class="finance-list-row finance-list-row-empty">
+                        <div class="finance-list-product">
+                            <div>
+                                <strong>Nenhuma cobranca em aberto</strong>
+                                <span>O financeiro do cliente esta conciliado no momento.</span>
+                            </div>
+                        </div>
+                    </article>
+                }
+                else
+                {
+                    @foreach (var entry in openEntries)
+                    {
+                        <article class="finance-list-row">
+                            <div class="finance-list-product">
+                                <span class="subscription-product-mark @(string.Equals(entry.Status, "Vencido", StringComparison.OrdinalIgnoreCase) ? "is-expired" : null)">@entry.ProductName.Substring(0, 1).ToUpperInvariant()</span>
+                                <div>
+                                    <strong>@entry.Description</strong>
+                                    <span>@entry.ProductName - @entry.ReferenceNumber</span>
+                                </div>
+                            </div>
+                            <div class="finance-list-meta">
+                                <span>Vencimento em @entry.DueOn.ToString("dd/MM/yyyy")</span>
+                                <strong>@entry.Amount.ToString("C")</strong>
+                            </div>
+                            <div class="finance-list-status">
+                                <span class="ticket-chip @($"financial-status-{entry.Status.ToLowerInvariant().Replace(" ", "-")}")">@entry.Status</span>
+                                <span>@entry.PaymentMethod</span>
+                            </div>
+                        </article>
+                    }
+                }
+            </div>
+        </section>
+
+        <section class="finance-secondary-grid">
+            <article class="finance-panel-card">
+                <div class="subscription-section-heading">
+                    <h2>Historico recente</h2>
+                    <p>Pagamentos confirmados e movimentacoes financeiras recentes.</p>
+                </div>
+
+                <div class="finance-history-stack">
+                    @foreach (var entry in paidEntries.DefaultIfEmpty().Take(4))
+                    {
+                        if (entry is null)
+                        {
+                            <article class="finance-history-item">
+                                <div>
+                                    <strong>Sem pagamentos registrados</strong>
+                                    <span>Ainda nao existem baixas confirmadas para este cliente.</span>
+                                </div>
+                            </article>
+                        }
+                        else
+                        {
+                            <article class="finance-history-item">
+                                <div>
+                                    <strong>@entry.Description</strong>
+                                    <span>@entry.ProductName - Pago em @(entry.PaidOn?.ToString("dd/MM/yyyy") ?? entry.DueOn.ToString("dd/MM/yyyy"))</span>
+                                </div>
+                                <strong>@entry.Amount.ToString("C")</strong>
+                            </article>
+                        }
+                    }
+                </div>
+            </article>
+
+            <article class="finance-panel-card">
+                <div class="subscription-section-heading">
+                    <h2>Forma de pagamento</h2>
+                    <p>Metodo predominante encontrado no historico da conta.</p>
+                </div>
+
+                <div class="finance-method-card">
+                    <span class="finance-method-label">Principal</span>
+                    <strong>@primaryPaymentMethod</strong>
+                    <p>Baseado nas movimentacoes financeiras mais recentes desta conta.</p>
+                </div>
+
+                <div class="finance-method-notes">
+                    <div>
+                        <span>Ultima baixa</span>
+                        <strong>@(latestPayment?.PaidOn?.ToString("dd/MM/yyyy") ?? latestPayment?.DueOn.ToString("dd/MM/yyyy") ?? "Sem registro")</strong>
+                    </div>
+                    <div>
+                        <span>Proxima cobranca</span>
+                        <strong>@(nextDue?.DueOn.ToString("dd/MM/yyyy") ?? "Sem pendencias")</strong>
+                    </div>
+                </div>
+
+                <div class="subscription-link-row">
+                    <a asp-area="Client" asp-controller="SupportTickets" asp-action="Create">Solicitar apoio financeiro</a>
+                    <a asp-area="Client" asp-controller="Dashboard" asp-action="Index" asp-fragment="acoes">Ver proximas acoes</a>
+                </div>
+            </article>
+        </section>
+    </div>
+</div>

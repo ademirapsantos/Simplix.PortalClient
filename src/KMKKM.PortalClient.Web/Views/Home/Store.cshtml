@@ -1,6 +1,7 @@
 @model KMKKM.PortalClient.Web.Models.Portal.StorePageScreenViewModel
 @{
     ViewData["Title"] = "K.M.K.K.M Store";
+    ViewData["ShellMode"] = "public";
     bool leadCreated = TempData["StoreLeadCreated"] as bool? ?? false;
 }
 

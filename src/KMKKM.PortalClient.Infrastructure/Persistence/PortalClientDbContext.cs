@@ -17,6 +17,8 @@ public sealed class PortalClientDbContext : IdentityDbContext<ApplicationUser, A
     public DbSet<CommercialPlan> CommercialPlans => Set<CommercialPlan>();
     public DbSet<CommercialLead> CommercialLeads => Set<CommercialLead>();
     public DbSet<CustomerLicense> CustomerLicenses => Set<CustomerLicense>();
+    public DbSet<CustomerFinancialRecord> CustomerFinancialRecords => Set<CustomerFinancialRecord>();
+    public DbSet<CustomerProductAccess> CustomerProductAccesses => Set<CustomerProductAccess>();
     public DbSet<SupportTicket> SupportTickets => Set<SupportTicket>();
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
@@ -27,6 +29,8 @@ public sealed class PortalClientDbContext : IdentityDbContext<ApplicationUser, A
         modelBuilder.ApplyConfiguration(new CommercialPlanConfiguration());
         modelBuilder.ApplyConfiguration(new CommercialLeadConfiguration());
         modelBuilder.ApplyConfiguration(new CustomerLicenseConfiguration());
+        modelBuilder.ApplyConfiguration(new CustomerFinancialRecordConfiguration());
+        modelBuilder.ApplyConfiguration(new CustomerProductAccessConfiguration());
         modelBuilder.ApplyConfiguration(new SupportTicketConfiguration());
     }
 }

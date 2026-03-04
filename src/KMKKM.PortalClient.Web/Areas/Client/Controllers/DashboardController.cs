@@ -24,4 +24,22 @@ public sealed class DashboardController : Controller
         var viewModel = await _clientWorkspaceService.GetWorkspaceAsync(userEmail, canViewAll, cancellationToken);
         return View(viewModel);
     }
+
+    [HttpGet]
+    public async Task<IActionResult> Subscriptions(CancellationToken cancellationToken)
+    {
+        string userEmail = User.Identity?.Name ?? string.Empty;
+        bool canViewAll = User.IsInRole(SystemRoles.Admin);
+        var viewModel = await _clientWorkspaceService.GetWorkspaceAsync(userEmail, canViewAll, cancellationToken);
+        return View(viewModel);
+    }
+
+    [HttpGet]
+    public async Task<IActionResult> Finance(CancellationToken cancellationToken)
+    {
+        string userEmail = User.Identity?.Name ?? string.Empty;
+        bool canViewAll = User.IsInRole(SystemRoles.Admin);
+        var viewModel = await _clientWorkspaceService.GetWorkspaceAsync(userEmail, canViewAll, cancellationToken);
+        return View(viewModel);
+    }
 }

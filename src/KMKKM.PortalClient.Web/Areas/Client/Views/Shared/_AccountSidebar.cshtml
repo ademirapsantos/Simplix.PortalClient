@@ -1,0 +1,25 @@
+@model KMKKM.PortalClient.Application.Contracts.Client.ClientWorkspaceViewModel
+@{
+    var section = (ViewData["ClientSection"] as string ?? "account").ToLowerInvariant();
+    var customerInitial = string.IsNullOrWhiteSpace(Model.CustomerName) ? "C" : Model.CustomerName.Substring(0, 1).ToUpperInvariant();
+}
+
+<aside class="client-account-sidebar">
+    <div class="client-account-profile">
+        <div class="client-account-avatar">@customerInitial</div>
+        <div>
+            <strong>@Model.CustomerName</strong>
+            <span>cliente@kmkkm.local</span>
+            <a asp-controller="Account" asp-action="ChangePassword">Gerenciar seguranca</a>
+        </div>
+    </div>
+
+    <nav class="client-account-nav" aria-label="Navegacao da conta">
+        <a class="@(section == "account" ? "is-active" : null)" asp-area="Client" asp-controller="Dashboard" asp-action="Index">Conta</a>
+        <a class="@(section == "subscriptions" ? "is-active" : null)" asp-area="Client" asp-controller="Dashboard" asp-action="Subscriptions">Assinaturas</a>
+        <a class="@(section == "finance" ? "is-active" : null)" asp-area="Client" asp-controller="Dashboard" asp-action="Finance">Financeiro</a>
+        <a asp-area="Client" asp-controller="Dashboard" asp-action="Index" asp-fragment="acessos">Acessos</a>
+        <a asp-area="Client" asp-controller="SupportTickets" asp-action="Index">Chamados</a>
+        <a asp-area="Client" asp-controller="Dashboard" asp-action="Index" asp-fragment="acoes">Proximas acoes</a>
+    </nav>
+</aside>

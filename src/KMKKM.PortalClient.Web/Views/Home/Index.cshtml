@@ -1,153 +1,168 @@
 @model KMKKM.PortalClient.Application.Contracts.Portal.LandingPageViewModel
 @{
     ViewData["Title"] = "K.M.K.K.M Portal do Cliente";
+    ViewData["ShellMode"] = "public";
 }
-
-<section class="landing-hero">
-    <div class="hero-copy hero-copy-main">
-        <span class="eyebrow">Portal publico, store e operacao do cliente em um unico ecossistema</span>
-        <h1>@Model.ProductName</h1>
-        <p class="hero-description hero-description-strong">@Model.CompanySummary</p>
-        <p class="hero-support">@Model.AboutCompany</p>
-        <div class="hero-actions">
-            <a class="btn btn-primary btn-lg" asp-action="Store">Conhecer solucoes</a>
-            <a class="btn btn-outline-light btn-lg" asp-controller="Account" asp-action="Login">Entrar no portal</a>
+<div class="marketing-page">
+    <section class="marketing-hero" id="topo">
+        <div class="marketing-hero-copy">
+            <span class="marketing-kicker">Ecossistema digital para operacao, licencas e relacionamento continuo</span>
+            <h1>Transforme a primeira visita em uma experiencia comercial memoravel.</h1>
+            <p class="marketing-hero-summary">@Model.CompanySummary</p>
+            <p class="marketing-hero-support">@Model.AboutCompany</p>
+            <div class="marketing-hero-actions">
+                <a class="btn btn-dark btn-lg marketing-primary-button" asp-action="Store">Conhecer solucoes</a>
+                <a class="btn btn-outline-dark btn-lg marketing-secondary-button" asp-controller="Account" asp-action="Login">Entrar no portal</a>
+            </div>
+            <div class="marketing-link-row">
+                <a href="#planos">Ver planos e precos</a>
+                <a href="#produtos">Explorar produtos</a>
+            </div>
         </div>
-        <div class="hero-signal-grid">
+
+        <aside class="marketing-hero-visual" aria-label="Apresentacao visual da plataforma">
+            <div class="marketing-orbit marketing-orbit-back"></div>
+            <div class="marketing-orbit marketing-orbit-front"></div>
+            <div class="marketing-stage-card marketing-stage-card-main">
+                <span class="tag">Operacao conectada</span>
+                <h2>@Model.CompanyName</h2>
+                <p>Store publica, gestao comercial e area do cliente organizadas em uma unica experiencia.</p>
+            </div>
+            <div class="marketing-floating-tile marketing-floating-tile-a">
+                <strong>Finance</strong>
+                <span>Licencas e cobrancas</span>
+            </div>
+            <div class="marketing-floating-tile marketing-floating-tile-b">
+                <strong>Service Desk</strong>
+                <span>Chamados e suporte</span>
+            </div>
+            <div class="marketing-floating-tile marketing-floating-tile-c">
+                <strong>Sales Cloud</strong>
+                <span>Relacionamento comercial</span>
+            </div>
+        </aside>
+    </section>
+
+    <section class="marketing-tab-strip">
+        <a href="#produtos" class="is-active">Aplicativos em destaque</a>
+        <a href="#beneficios">Beneficios</a>
+        <a href="#recursos">Recursos</a>
+        <a href="#planos">Planos</a>
+        <a href="#roadmap">Proximas etapas</a>
+        <a class="marketing-tab-cta" asp-action="Store">Inscreva-se</a>
+    </section>
+
+    <section class="marketing-section" id="beneficios">
+        <div class="marketing-section-heading">
+            <div>
+                <span class="section-kicker">Por que a K.M.K.K.M</span>
+                <h2>Uma apresentacao comercial que convida o cliente a continuar navegando.</h2>
+            </div>
+            <p>O objetivo da pagina inicial e apresentar valor, portfolio e proximos passos com uma linguagem muito mais comercial do que tecnica.</p>
+        </div>
+        <div class="marketing-benefit-grid">
             @foreach (var highlight in Model.Highlights)
             {
-                <article class="signal-card">
-                    <span class="signal-icon"></span>
+                <article class="marketing-benefit-card">
+                    <span class="marketing-benefit-index"></span>
                     <p>@highlight</p>
                 </article>
             }
         </div>
-    </div>
-    <aside class="hero-showcase">
-        <div class="hero-showcase-card hero-showcase-primary">
-            <span class="tag">Experiencia unificada</span>
-            <h2>Do primeiro contato ate o suporte continuo</h2>
-            <p>Uma pagina inicial comercial para apresentar a empresa, a store para explorar os produtos e uma area reservada para relacionamento pos-venda.</p>
-        </div>
-        <div class="hero-showcase-stack">
-            <article class="hero-showcase-card">
-                <span class="showcase-label">Publico</span>
-                <strong>Landing institucional</strong>
-                <p>Mensagem clara, valor da marca e entrada direta para catalogo e login.</p>
-            </article>
-            <article class="hero-showcase-card">
-                <span class="showcase-label">Operacao</span>
-                <strong>Store + area do cliente</strong>
-                <p>Licencas, upgrades, chamados e acompanhamento centralizados.</p>
-            </article>
-        </div>
-    </aside>
-</section>
+    </section>
 
-<section class="section-block">
-    <div class="section-heading">
-        <div>
-            <span class="section-kicker">Caminhos de entrada</span>
-            <h2>Escolha o proximo passo</h2>
+    <section class="marketing-section" id="produtos">
+        <div class="marketing-section-heading">
+            <div>
+                <span class="section-kicker">Produtos</span>
+                <h2>Aplicativos apresentados como portfolio de verdade.</h2>
+            </div>
+            <a asp-action="Store">Catalogo completo</a>
         </div>
-        <a asp-action="Store">Ver experiencias disponiveis</a>
-    </div>
-    <div class="journey-grid">
-        <article class="journey-card">
-            <span class="tag">Descoberta</span>
-            <h3>Quero conhecer os aplicativos</h3>
-            <p>Use a Store para ver categorias, posicionamento dos produtos e o status comercial de cada solucao.</p>
+        <div class="marketing-product-grid">
+            @foreach (var application in Model.FeaturedApplications)
+            {
+                <article class="marketing-product-card">
+                    <span class="product-badge">@application.Category</span>
+                    <h3>@application.Name</h3>
+                    <p>@application.Description</p>
+                    <div class="marketing-product-footer">
+                        <span>@application.Positioning</span>
+                        <strong>@application.Status</strong>
+                    </div>
+                </article>
+            }
+            <article class="marketing-story-card" id="recursos">
+                <span class="section-kicker">Apresentacao da empresa</span>
+                <h3>@Model.ProductName</h3>
+                <p>@Model.AboutCompany</p>
+                <a asp-action="Store">Ver a experiencia comercial completa</a>
+            </article>
+        </div>
+    </section>
+
+    <section class="marketing-section" id="planos">
+        <div class="marketing-section-heading">
+            <div>
+                <span class="section-kicker">Planos e precos</span>
+                <h2>Formatos comerciais prontos para diferentes momentos do cliente.</h2>
+            </div>
+            <p>Do primeiro passo ate operacoes mais maduras, a estrutura comercial precisa ser clara e convidativa.</p>
+        </div>
+        <div class="marketing-pricing-grid">
+            @foreach (var plan in Model.CommercialPlans)
+            {
+                <article class="marketing-pricing-card">
+                    <span class="tag">Plano</span>
+                    <h3>@plan.Name</h3>
+                    <p>@plan.Description</p>
+                    <strong>@plan.TargetAudience</strong>
+                </article>
+            }
+        </div>
+    </section>
+
+    <section class="marketing-section" id="suporte">
+        <div class="marketing-section-heading">
+            <div>
+                <span class="section-kicker">Suporte e continuidade</span>
+                <h2>Depois da venda, a experiencia continua organizada.</h2>
+            </div>
+            <p>O cliente acessa um workspace para acompanhar licencas, renovacoes, financeiro, acessos e atendimento sem perder contexto.</p>
+        </div>
+        <div class="marketing-dual-grid">
+            <article class="marketing-info-card marketing-info-card-soft">
+                <h3>Jornada comercial e operacional em uma so plataforma</h3>
+                <p>Pagina inicial, store, portal do cliente, chamados e gestao comercial convivem com a mesma base de produto.</p>
+            </article>
+            <article class="marketing-info-card">
+                <h3>Entrada clara para cada perfil</h3>
+                <ul>
+                    <li>Visitante conhece a empresa e o portfolio.</li>
+                    <li>Lead comercial entra em conversa com vendas.</li>
+                    <li>Cliente acessa operacao, suporte e upgrades.</li>
+                </ul>
+            </article>
+        </div>
+    </section>
+
+    <section class="marketing-section" id="roadmap">
+        <div class="marketing-section-heading">
+            <div>
+                <span class="section-kicker">Proximas etapas</span>
+                <h2>Evolucao pensada em fases para sustentar a plataforma.</h2>
+            </div>
             <a asp-action="Store">Ir para a Store</a>
-        </article>
-        <article class="journey-card">
-            <span class="tag">Cliente</span>
-            <h3>Ja sou cliente e preciso acessar</h3>
-            <p>Entre no portal para acompanhar licencas, upgrades, atendimentos e a operacao contratada.</p>
-            <a asp-area="Client" asp-controller="Dashboard" asp-action="Index">Abrir area do cliente</a>
-        </article>
-        <article class="journey-card">
-            <span class="tag">Gestao</span>
-            <h3>Quero acompanhar a evolucao da plataforma</h3>
-            <p>Visualize a estrutura planejada para a camada publica, operacao comercial, suporte e administracao.</p>
-            <a href="#roadmap">Ver roadmap</a>
-        </article>
-    </div>
-</section>
-
-<section class="section-block">
-    <div class="section-heading">
-        <div>
-            <span class="section-kicker">Aplicacoes em destaque</span>
-            <h2>Produtos apresentados com foco comercial</h2>
         </div>
-        <a asp-action="Store">Catalogo completo</a>
-    </div>
-    <div class="card-grid">
-        @foreach (var application in Model.FeaturedApplications)
-        {
-            <article class="product-card product-card-featured">
-                <span class="product-badge">@application.Category</span>
-                <h3>@application.Name</h3>
-                <p>@application.Description</p>
-                <div class="card-footer card-footer-column">
-                    <span>@application.Positioning</span>
-                    <strong>@application.Status</strong>
-                </div>
-            </article>
-        }
-    </div>
-</section>
-
-<section class="section-grid section-grid-emphasis">
-    <article class="section-card section-card-blue">
-        <span class="section-kicker">Como a K.M.K.K.M aparece</span>
-        <h2>Uma home com cara de produto, nao de painel tecnico</h2>
-        <p>@Model.AboutCompany</p>
-    </article>
-    <article class="section-card">
-        <span class="section-kicker">Estrutura inicial</span>
-        <h2>Base pronta para crescer sem quebrar a experiencia</h2>
-        <p>Portal publico, K.M.K.K.M Store, area do cliente, chamados, chat e administracao comercial e de suporte em uma unica solution.</p>
-    </article>
-</section>
-
-<section class="section-block">
-    <div class="section-heading">
-        <div>
-            <span class="section-kicker">Planos comerciais</span>
-            <h2>Formatos de venda pensados para perfis diferentes</h2>
+        <div class="marketing-roadmap-grid">
+            @foreach (var item in Model.Roadmap)
+            {
+                <article class="marketing-roadmap-card">
+                    <span class="roadmap-step">@item.StepNumber.ToString("00")</span>
+                    <h3>@item.Title</h3>
+                    <p>@item.Description</p>
+                </article>
+            }
         </div>
-        <span>Licencas, upgrades e contratacao recorrente</span>
-    </div>
-    <div class="pricing-grid">
-        @foreach (var plan in Model.CommercialPlans)
-        {
-            <article class="pricing-card">
-                <span class="tag">Plano</span>
-                <h3>@plan.Name</h3>
-                <p>@plan.Description</p>
-                <strong>@plan.TargetAudience</strong>
-            </article>
-        }
-    </div>
-</section>
-
-<section class="section-block" id="roadmap">
-    <div class="section-heading">
-        <div>
-            <span class="section-kicker">Roadmap imediato</span>
-            <h2>Entrega em fases para reduzir retrabalho</h2>
-        </div>
-        <span>Construindo na ordem correta</span>
-    </div>
-    <div class="roadmap-grid">
-        @foreach (var item in Model.Roadmap)
-        {
-            <article class="roadmap-card">
-                <span class="roadmap-step">@item.StepNumber.ToString("00")</span>
-                <h3>@item.Title</h3>
-                <p>@item.Description</p>
-            </article>
-        }
-    </div>
-</section>
+    </section>
+</div>

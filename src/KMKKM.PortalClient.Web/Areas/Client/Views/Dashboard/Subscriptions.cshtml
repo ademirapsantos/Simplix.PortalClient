@@ -1,0 +1,176 @@
+@model KMKKM.PortalClient.Application.Contracts.Client.ClientWorkspaceViewModel
+@{
+    ViewData["Title"] = "Assinaturas";
+    ViewData["UseWideShell"] = true;
+    ViewData["ClientSection"] = "subscriptions";
+
+    var activeLicenses = Model.Licenses
+        .Where(x => string.Equals(x.Status, "Ativa", StringComparison.OrdinalIgnoreCase))
+        .OrderBy(x => x.ExpiresOn)
+        .ToArray();
+
+    var expiredLicenses = Model.Licenses
+        .Where(x => !string.Equals(x.Status, "Ativa", StringComparison.OrdinalIgnoreCase))
+        .OrderByDescending(x => x.ExpiresOn)
+        .ToArray();
+
+    var primaryLicense = activeLicenses.FirstOrDefault() ?? Model.Licenses.OrderBy(x => x.ExpiresOn).First();
+    var totalLicenses = Model.Licenses.Count;
+    var activeCount = activeLicenses.Length;
+    var expiredCount = expiredLicenses.Length;
+}
+
+<div class="client-account-shell">
+    <partial name="~/Areas/Client/Views/Shared/_AccountSidebar.cshtml" model="Model" />
+
+    <div class="client-account-content subscriptions-page">
+        <section class="client-account-header">
+            <div>
+                <p class="client-account-kicker">Assinaturas</p>
+                <h1>Assinaturas</h1>
+            </div>
+
+            <div class="client-account-actions">
+                @foreach (var license in Model.Licenses.OrderBy(x => x.ExpiresOn).Take(2))
+                {
+                    <article class="client-summary-card">
+                        <span class="client-summary-icon">@license.ProductName.Substring(0, 1).ToUpperInvariant()</span>
+                        <div>
+                            <strong>@license.ProductName</strong>
+                            <p>@(license.Status == "Ativa" ? $"Renovacao em {license.ExpiresOn:dd/MM/yyyy}" : $"Expirada em {license.ExpiresOn:dd/MM/yyyy}")</p>
+                        </div>
+                    </article>
+                }
+            </div>
+        </section>
+
+        <section class="client-accordion-stack">
+            <details class="client-account-panel client-account-panel-featured" open>
+                <summary>
+                    <div class="client-panel-heading">
+                        <div>
+                            <strong>@primaryLicense.ProductName</strong>
+                            <p>Plano @primaryLicense.PlanName com visao consolidada do contrato e da renovacao.</p>
+                        </div>
+                        <span class="client-panel-status">@primaryLicense.Status</span>
+                    </div>
+                </summary>
+                <div class="client-panel-body">
+                    <div class="subscription-feature-grid">
+                        <div class="subscription-feature-stat">
+                            <span>Total contratado</span>
+                            <strong>@activeCount / @totalLicenses</strong>
+                            <p>Assinaturas ativas dentro do workspace atual.</p>
+                        </div>
+
+                        <div class="subscription-feature-stat">
+                            <span>Renovacao principal</span>
+                            <strong>@primaryLicense.ExpiresOn.ToString("dd/MM/yyyy")</strong>
+                            <p>Data da proxima revisao comercial do pacote principal.</p>
+                        </div>
+
+                        <div class="subscription-feature-progress">
+                            <div class="subscription-progress-header">
+                                <strong>Status do portfolio</strong>
+                                <span>@activeCount ativas</span>
+                            </div>
+                            <div class="subscription-progress-track" aria-hidden="true">
+                                <span style="width:@((activeCount == 0 ? 0 : (int)Math.Round((double)activeCount * 100 / totalLicenses)))%;"></span>
+                            </div>
+                            <div class="subscription-progress-legend">
+                                <span><i class="is-primary"></i>Ativas</span>
+                                <span><i class="is-muted"></i>Expiradas</span>
+                                <strong>@expiredCount expiradas</strong>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="subscription-link-row">
+                        <a asp-area="Client" asp-controller="Dashboard" asp-action="Index" asp-fragment="acoes">Revisar proximas acoes</a>
+                        <a asp-area="Client" asp-controller="SupportTickets" asp-action="Index">Abrir suporte comercial</a>
+                    </div>
+                </div>
+            </details>
+        </section>
+
+        <section class="subscription-section">
+            <div class="subscription-section-heading">
+                <h2>Assinaturas ativas</h2>
+                <p>Produtos ativos dentro do contrato atual do cliente.</p>
+            </div>
+
+            <div class="subscription-list-card">
+                @foreach (var license in activeLicenses)
+                {
+                    <article class="subscription-list-row">
+                        <div class="subscription-list-product">
+                            <span class="subscription-product-mark">@license.ProductName.Substring(0, 1).ToUpperInvariant()</span>
+                            <div>
+                                <strong>@license.ProductName</strong>
+                                <span>Plano @license.PlanName</span>
+                            </div>
+                        </div>
+                        <div class="subscription-list-meta">
+                            <span>Renovacao em @license.ExpiresOn.ToString("dd/MM/yyyy")</span>
+                        </div>
+                        <div class="subscription-list-actions">
+                            <span class="ticket-chip ticket-chip-muted">@license.Status</span>
+                            <a asp-area="Client" asp-controller="Dashboard" asp-action="Index" asp-fragment="assinaturas">Gerenciar</a>
+                        </div>
+                    </article>
+                }
+            </div>
+        </section>
+
+        @if (expiredLicenses.Length > 0)
+        {
+            <section class="subscription-section">
+                <div class="subscription-section-heading">
+                    <h2>Assinaturas expiradas</h2>
+                    <p>Licencas vencidas ou encerradas aguardando revisao comercial.</p>
+                </div>
+
+                <div class="subscription-list-card">
+                    @foreach (var license in expiredLicenses)
+                    {
+                        <article class="subscription-list-row">
+                            <div class="subscription-list-product">
+                                <span class="subscription-product-mark is-expired">@license.ProductName.Substring(0, 1).ToUpperInvariant()</span>
+                                <div>
+                                    <strong>@license.ProductName</strong>
+                                    <span>Plano @license.PlanName</span>
+                                </div>
+                            </div>
+                            <div class="subscription-list-meta">
+                                <span>Expirada em @license.ExpiresOn.ToString("dd/MM/yyyy")</span>
+                            </div>
+                            <div class="subscription-list-actions">
+                                <a asp-area="Client" asp-controller="Dashboard" asp-action="Index" asp-fragment="acoes">Renovar</a>
+                            </div>
+                        </article>
+                    }
+                </div>
+            </section>
+        }
+
+        <section class="subscription-section">
+            <div class="subscription-section-heading">
+                <h2>Evolucao recomendada</h2>
+                <p>Produtos sugeridos para ampliar a operacao do cliente.</p>
+            </div>
+
+            <div class="subscription-recommendation-grid">
+                @foreach (var upgrade in Model.AvailableUpgrades.DefaultIfEmpty("Sem novos upgrades sugeridos no momento.").Take(3))
+                {
+                    <article class="subscription-recommendation-card">
+                        <div class="subscription-recommendation-media"></div>
+                        <div class="subscription-recommendation-copy">
+                            <strong>@upgrade</strong>
+                            <p>Expansao sugerida com base nas licencas e no momento atual da conta.</p>
+                        </div>
+                    </article>
+                }
+            </div>
+        </section>
+    </div>
+</div>

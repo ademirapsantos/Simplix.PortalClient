@@ -104,7 +104,7 @@ internal sealed class PortalClientDbContextInitializer : IHostedService
 
         if (!await dbContext.CustomerLicenses.AnyAsync(cancellationToken))
         {
-            dbContext.CustomerLicenses.Add(
+            dbContext.CustomerLicenses.AddRange(
                 new CustomerLicense
                 {
                     CustomerName = "Cliente demonstracao",
@@ -112,6 +112,96 @@ internal sealed class PortalClientDbContextInitializer : IHostedService
                     ProductName = "KMKKM Finance",
                     PlanName = "Growth",
                     ExpiresOn = new DateOnly(2026, 3, 15)
+                },
+                new CustomerLicense
+                {
+                    CustomerName = "Cliente demonstracao",
+                    CustomerEmail = "cliente@kmkkm.local",
+                    ProductName = "KMKKM Service Desk",
+                    PlanName = "Start",
+                    ExpiresOn = new DateOnly(2026, 4, 10)
+                });
+        }
+
+        if (!await dbContext.CustomerFinancialRecords.AnyAsync(cancellationToken))
+        {
+            dbContext.CustomerFinancialRecords.AddRange(
+                new CustomerFinancialRecord
+                {
+                    CustomerName = "Cliente demonstracao",
+                    CustomerEmail = "cliente@kmkkm.local",
+                    ProductName = "KMKKM Finance",
+                    ReferenceNumber = "FAT-2026-001",
+                    Description = "Mensalidade da licenca Growth",
+                    Status = "Pago",
+                    PaymentMethod = "PIX",
+                    Amount = 890.00m,
+                    DueOn = new DateOnly(2026, 1, 10),
+                    PaidOn = new DateOnly(2026, 1, 8)
+                },
+                new CustomerFinancialRecord
+                {
+                    CustomerName = "Cliente demonstracao",
+                    CustomerEmail = "cliente@kmkkm.local",
+                    ProductName = "KMKKM Finance",
+                    ReferenceNumber = "FAT-2026-002",
+                    Description = "Mensalidade da licenca Growth",
+                    Status = "Pago",
+                    PaymentMethod = "Boleto",
+                    Amount = 890.00m,
+                    DueOn = new DateOnly(2026, 2, 10),
+                    PaidOn = new DateOnly(2026, 2, 11)
+                },
+                new CustomerFinancialRecord
+                {
+                    CustomerName = "Cliente demonstracao",
+                    CustomerEmail = "cliente@kmkkm.local",
+                    ProductName = "KMKKM Finance",
+                    ReferenceNumber = "FAT-2026-003",
+                    Description = "Mensalidade da licenca Growth",
+                    Status = "Pendente",
+                    PaymentMethod = "Boleto",
+                    Amount = 890.00m,
+                    DueOn = new DateOnly(2026, 3, 10)
+                },
+                new CustomerFinancialRecord
+                {
+                    CustomerName = "Cliente demonstracao",
+                    CustomerEmail = "cliente@kmkkm.local",
+                    ProductName = "KMKKM Service Desk",
+                    ReferenceNumber = "FAT-2026-004",
+                    Description = "Implantacao do modulo de suporte",
+                    Status = "Vencido",
+                    PaymentMethod = "Transferencia",
+                    Amount = 1450.00m,
+                    DueOn = new DateOnly(2026, 2, 25)
+                });
+        }
+
+        if (!await dbContext.CustomerProductAccesses.AnyAsync(cancellationToken))
+        {
+            dbContext.CustomerProductAccesses.AddRange(
+                new CustomerProductAccess
+                {
+                    CustomerName = "Cliente demonstracao",
+                    CustomerEmail = "cliente@kmkkm.local",
+                    ProductName = "KMKKM Finance",
+                    EnvironmentName = "Producao",
+                    AccessLabel = "Abrir ERP Financeiro",
+                    AccessUrl = "https://finance.kmkkm.local",
+                    AccessStatus = "Liberado",
+                    CredentialHint = "Use o mesmo email do portal e a senha corporativa atual."
+                },
+                new CustomerProductAccess
+                {
+                    CustomerName = "Cliente demonstracao",
+                    CustomerEmail = "cliente@kmkkm.local",
+                    ProductName = "KMKKM Service Desk",
+                    EnvironmentName = "Homologacao",
+                    AccessLabel = "Entrar no ambiente de testes",
+                    AccessUrl = "https://service-desk-hml.kmkkm.local",
+                    AccessStatus = "Em implantacao",
+                    CredentialHint = "A liberacao final depende da baixa da implantacao e validacao do time K.M.K.K.M."
                 });
         }
 

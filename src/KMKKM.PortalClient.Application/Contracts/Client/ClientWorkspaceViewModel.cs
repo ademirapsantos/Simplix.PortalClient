@@ -6,6 +6,8 @@ public sealed record ClientWorkspaceViewModel(
     DateOnly NextRenewalDate,
     IReadOnlyCollection<ClientMetricViewModel> Metrics,
     IReadOnlyCollection<ClientLicenseViewModel> Licenses,
+    IReadOnlyCollection<ClientFinancialEntryViewModel> FinancialHistory,
+    IReadOnlyCollection<ClientProductAccessViewModel> ProductAccesses,
     IReadOnlyCollection<ClientTicketViewModel> RecentTickets,
     IReadOnlyCollection<string> RecommendedActions,
     IReadOnlyCollection<string> AvailableUpgrades);
@@ -20,6 +22,24 @@ public sealed record ClientLicenseViewModel(
     string PlanName,
     DateOnly ExpiresOn,
     string Status);
+
+public sealed record ClientFinancialEntryViewModel(
+    string ReferenceNumber,
+    string ProductName,
+    string Description,
+    decimal Amount,
+    DateOnly DueOn,
+    DateOnly? PaidOn,
+    string Status,
+    string PaymentMethod);
+
+public sealed record ClientProductAccessViewModel(
+    string ProductName,
+    string EnvironmentName,
+    string AccessLabel,
+    string AccessUrl,
+    string AccessStatus,
+    string CredentialHint);
 
 public sealed record ClientTicketViewModel(
     string Subject,
