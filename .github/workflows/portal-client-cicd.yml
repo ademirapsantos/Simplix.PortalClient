@@ -68,11 +68,11 @@ jobs:
           dotnet-version: 9.0.x
 
       - name: Restore
-        run: dotnet restore KMKKM.PortalClient.sln
+        run: dotnet restore Simplix.PortalClient.sln
 
       - name: Build
         run: >
-          dotnet build KMKKM.PortalClient.sln
+          dotnet build Simplix.PortalClient.sln
           --configuration Release
           /p:Version=${{ needs.version.outputs.version }}
           /p:AssemblyVersion=${{ needs.version.outputs.assembly_version }}
@@ -81,7 +81,7 @@ jobs:
           /p:SourceRevisionId=${{ github.sha }}
 
       - name: Test
-        run: dotnet test KMKKM.PortalClient.sln --configuration Release --no-build
+        run: dotnet test Simplix.PortalClient.sln --configuration Release --no-build
 
   publish-image:
     runs-on: ubuntu-latest
@@ -102,7 +102,7 @@ jobs:
       - uses: docker/build-push-action@v6
         with:
           context: .
-          file: ./src/KMKKM.PortalClient.Web/Dockerfile
+          file: ./src/Simplix.PortalClient.Web/Dockerfile
           push: true
           tags: |
             ${{ env.REGISTRY }}/${{ needs.version.outputs.image_name }}:${{ needs.version.outputs.image_tag }}
@@ -150,7 +150,7 @@ jobs:
           echo "configured=true" >> "$GITHUB_OUTPUT"
           echo "host=$DEPLOY_HOST_INPUT" >> "$GITHUB_OUTPUT"
           echo "user=$DEPLOY_USER_INPUT" >> "$GITHUB_OUTPUT"
-          echo "path=${DEPLOY_PATH_INPUT:-/opt/kmkkm/portal-client}" >> "$GITHUB_OUTPUT"
+          echo "path=${DEPLOY_PATH_INPUT:-/opt/simplix/portal-client}" >> "$GITHUB_OUTPUT"
 
       - name: Deploy
         if: ${{ steps.deploy_config.outputs.configured == 'true' }}
@@ -203,7 +203,7 @@ jobs:
           echo "configured=true" >> "$GITHUB_OUTPUT"
           echo "host=$DEPLOY_HOST_INPUT" >> "$GITHUB_OUTPUT"
           echo "user=$DEPLOY_USER_INPUT" >> "$GITHUB_OUTPUT"
-          echo "path=${DEPLOY_PATH_INPUT:-/opt/kmkkm/portal-client}" >> "$GITHUB_OUTPUT"
+          echo "path=${DEPLOY_PATH_INPUT:-/opt/simplix/portal-client}" >> "$GITHUB_OUTPUT"
 
       - name: Deploy
         if: ${{ steps.deploy_config.outputs.configured == 'true' }}

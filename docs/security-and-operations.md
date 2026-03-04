@@ -12,10 +12,10 @@ As contas de seed continuam sendo criadas pelo `PortalClientDbContextInitializer
 Para desenvolvimento local, prefira `dotnet user-secrets` no projeto Web:
 
 ```bash
-dotnet user-secrets --project src/KMKKM.PortalClient.Web set "SeedUsers:Admin:Password" "Troque-Esta-Senha-Admin!"
-dotnet user-secrets --project src/KMKKM.PortalClient.Web set "SeedUsers:Sales:Password" "Troque-Esta-Senha-Vendas!"
-dotnet user-secrets --project src/KMKKM.PortalClient.Web set "SeedUsers:Support:Password" "Troque-Esta-Senha-Suporte!"
-dotnet user-secrets --project src/KMKKM.PortalClient.Web set "SeedUsers:Client:Password" "Troque-Esta-Senha-Cliente!"
+dotnet user-secrets --project src/Simplix.PortalClient.Web set "SeedUsers:Admin:Password" "Troque-Esta-Senha-Admin!"
+dotnet user-secrets --project src/Simplix.PortalClient.Web set "SeedUsers:Sales:Password" "Troque-Esta-Senha-Vendas!"
+dotnet user-secrets --project src/Simplix.PortalClient.Web set "SeedUsers:Support:Password" "Troque-Esta-Senha-Suporte!"
+dotnet user-secrets --project src/Simplix.PortalClient.Web set "SeedUsers:Client:Password" "Troque-Esta-Senha-Cliente!"
 ```
 
 Se um usuario de seed estiver configurado com e-mail mas sem senha, a inicializacao falha de proposito para evitar bootstrap inseguro.
