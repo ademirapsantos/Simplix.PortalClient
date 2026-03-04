@@ -3,10 +3,10 @@ name: ${COMPOSE_PROJECT_NAME}
 services:
   app:
     container_name: ${APP_NAME}
-    image: ${REGISTRY_IMAGE:-ghcr.io/ademirapsantos/kmkkm_portalclient/portal-client-app}:${IMAGE_TAG:-dev}
+    image: ${REGISTRY_IMAGE:-ghcr.io/ademirapsantos/simplix.portalclient/portal-client-app}:${IMAGE_TAG:-dev}
     build:
       context: ..
-      dockerfile: src/KMKKM.PortalClient.Web/Dockerfile
+      dockerfile: src/Simplix.PortalClient.Web/Dockerfile
     environment:
       ASPNETCORE_ENVIRONMENT: Production
       ConnectionStrings__Postgres: Host=postgres;Port=5432;Database=${POSTGRES_DB};Username=${POSTGRES_USER};Password=${POSTGRES_PASSWORD}
@@ -34,7 +34,7 @@ services:
       start_period: 20s
     restart: unless-stopped
     networks:
-      - kmkkm-backbone
+      - simplix-backbone
       - proxy
 
   postgres:
@@ -54,7 +54,7 @@ services:
       start_period: 10s
     restart: unless-stopped
     networks:
-      - kmkkm-backbone
+      - simplix-backbone
 
   update:
     container_name: ${UPDATE_NAME}
@@ -80,10 +80,10 @@ services:
       start_period: 5s
     restart: unless-stopped
     networks:
-      - kmkkm-backbone
+      - simplix-backbone
 
 networks:
-  kmkkm-backbone:
+  simplix-backbone:
     driver: bridge
   proxy:
     external: true
@@ -91,3 +91,4 @@ networks:
 volumes:
   postgres-data:
     name: ${POSTGRES_VOLUME_NAME}
+

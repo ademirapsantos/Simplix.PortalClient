@@ -1,0 +1,52 @@
+﻿@model Simplix.PortalClient.Web.Models.Account.LoginViewModel
+@{
+    ViewData["Title"] = "Entrar";
+}
+
+<section class="auth-shell">
+    <div class="auth-card">
+        <div>
+            <span class="eyebrow">Acesso ao sistema</span>
+            <h1>Entrar no Portal</h1>
+            <p class="hero-description">Use seu perfil de cliente, admin, vendas ou suporte para acessar as areas protegidas do sistema.</p>
+        </div>
+
+        <form method="post" class="auth-form">
+            @Html.AntiForgeryToken()
+            <input asp-for="ReturnUrl" type="hidden" />
+
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+
+            <div>
+                <label asp-for="Email" class="form-label"></label>
+                <input asp-for="Email" class="form-control" autocomplete="username" />
+                <span asp-validation-for="Email" class="text-danger"></span>
+            </div>
+
+            <div>
+                <label asp-for="Password" class="form-label"></label>
+                <input asp-for="Password" class="form-control" autocomplete="current-password" />
+                <span asp-validation-for="Password" class="text-danger"></span>
+            </div>
+
+            <div class="form-check">
+                <input asp-for="RememberMe" class="form-check-input" />
+                <label asp-for="RememberMe" class="form-check-label"></label>
+            </div>
+
+            <button type="submit" class="btn btn-primary btn-lg">Entrar</button>
+            <a asp-action="ForgotPassword" class="auth-link">Esqueci minha senha</a>
+        </form>
+    </div>
+
+    <aside class="auth-aside">
+        <h2>Acesso protegido</h2>
+        <p class="hero-description">O portal agora aplica bloqueio temporario por tentativas invalidas, suporta troca de senha autenticada e possui fluxo de redefinicao com token.</p>
+        <p class="hero-description">As credenciais iniciais devem ser configuradas fora do repositorio, via variaveis de ambiente, compose ou `dotnet user-secrets`.</p>
+    </aside>
+</section>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+}
+

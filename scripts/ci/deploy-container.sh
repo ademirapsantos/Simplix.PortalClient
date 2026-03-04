@@ -3,7 +3,7 @@ set -eu
 
 REMOTE_HOST="${REMOTE_HOST:-}"
 REMOTE_USER="${REMOTE_USER:-}"
-REMOTE_PATH="${REMOTE_PATH:-/opt/kmkkm/portal-client}"
+REMOTE_PATH="${REMOTE_PATH:-/opt/simplix/portal-client}"
 DEPLOY_ENV="${DEPLOY_ENV:-dev}"
 REGISTRY="${REGISTRY:-ghcr.io}"
 REGISTRY_IMAGE="${REGISTRY_IMAGE:-}"
