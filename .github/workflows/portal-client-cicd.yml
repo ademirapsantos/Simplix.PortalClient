@@ -14,7 +14,6 @@ permissions:
 
 env:
   REGISTRY: ghcr.io
-  IMAGE_NAME: ${{ github.repository }}/portal-client-app
 
 jobs:
   version:
@@ -28,6 +27,7 @@ jobs:
       short_sha: ${{ steps.meta.outputs.short_sha }}
       deploy_env: ${{ steps.branch.outputs.deploy_env }}
       git_branch: ${{ steps.branch.outputs.git_branch }}
+      image_name: ${{ steps.image.outputs.image_name }}
     steps:
       - uses: actions/checkout@v4
         with:
@@ -43,6 +43,11 @@ jobs:
             *) echo "deploy_env=dev" >> "$GITHUB_OUTPUT" ;;
           esac
           echo "git_branch=$BRANCH_NAME" >> "$GITHUB_OUTPUT"
+
+      - id: image
+        shell: bash
+        run: |
+          echo "image_name=${GITHUB_REPOSITORY,,}/portal-client-app" >> "$GITHUB_OUTPUT"
 
       - id: meta
         shell: pwsh
@@ -63,11 +68,11 @@ jobs:
           dotnet-version: 9.0.x
 
       - name: Restore
-        run: dotnet restore KMKKM.PortalClient.sln
+        run: dotnet restore Simplix.PortalClient.sln
 
       - name: Build
         run: >
-          dotnet build KMKKM.PortalClient.sln
+          dotnet build Simplix.PortalClient.sln
           --configuration Release
           /p:Version=${{ needs.version.outputs.version }}
           /p:AssemblyVersion=${{ needs.version.outputs.assembly_version }}
@@ -76,7 +81,7 @@ jobs:
           /p:SourceRevisionId=${{ github.sha }}
 
       - name: Test
-        run: dotnet test KMKKM.PortalClient.sln --configuration Release --no-build
+        run: dotnet test Simplix.PortalClient.sln --configuration Release --no-build
 
   publish-image:
     runs-on: ubuntu-latest
@@ -97,38 +102,120 @@ jobs:
       - uses: docker/build-push-action@v6
         with:
           context: .
-          file: ./src/KMKKM.PortalClient.Web/Dockerfile
+          file: ./src/Simplix.PortalClient.Web/Dockerfile
           push: true
           tags: |
-            ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:${{ needs.version.outputs.image_tag }}
-            ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:${{ needs.version.outputs.git_branch }}
+            ${{ env.REGISTRY }}/${{ needs.version.outputs.image_name }}:${{ needs.version.outputs.image_tag }}
+            ${{ env.REGISTRY }}/${{ needs.version.outputs.image_name }}:${{ needs.version.outputs.git_branch }}
           build-args: |
             APP_VERSION=${{ needs.version.outputs.version }}
             SOURCE_REVISION=${{ github.sha }}
 
-  deploy:
-    runs-on: ubuntu-latest
+  deploy-local:
+    runs-on:
+      - self-hosted
+      - Linux
+      - X64
     needs:
       - version
       - publish-image
+    if: ${{ needs.version.outputs.deploy_env == 'dev' || needs.version.outputs.deploy_env == 'hmg' }}
     environment: ${{ needs.version.outputs.deploy_env }}
     steps:
       - uses: actions/checkout@v4
 
       - name: Prepare SSH key
+        if: ${{ secrets.DEPLOY_SSH_KEY != '' }}
         shell: bash
         run: |
           mkdir -p ~/.ssh
           echo "${{ secrets.DEPLOY_SSH_KEY }}" > ~/.ssh/id_ed25519
           chmod 600 ~/.ssh/id_ed25519
 
-      - name: Deploy
+      - name: Validate deploy config
+        id: deploy_config
         shell: bash
         env:
-          REMOTE_HOST: ${{ secrets.DEPLOY_HOST }}
-          REMOTE_USER: ${{ secrets.DEPLOY_USER }}
-          REMOTE_PATH: ${{ secrets.DEPLOY_PATH }}
+          DEPLOY_HOST_INPUT: ${{ secrets.DEPLOY_HOST != '' && secrets.DEPLOY_HOST || vars.DEPLOY_HOST }}
+          DEPLOY_USER_INPUT: ${{ secrets.DEPLOY_USER != '' && secrets.DEPLOY_USER || vars.DEPLOY_USER }}
+          DEPLOY_PATH_INPUT: ${{ secrets.DEPLOY_PATH != '' && secrets.DEPLOY_PATH || vars.DEPLOY_PATH }}
+          DEPLOY_SSH_KEY_INPUT: ${{ secrets.DEPLOY_SSH_KEY }}
+        run: |
+          if [ -z "$DEPLOY_HOST_INPUT" ] || [ -z "$DEPLOY_USER_INPUT" ] || [ -z "$DEPLOY_SSH_KEY_INPUT" ]; then
+            echo "configured=false" >> "$GITHUB_OUTPUT"
+            echo "Deploy skipped: missing DEPLOY_HOST, DEPLOY_USER or DEPLOY_SSH_KEY in environment '${{ needs.version.outputs.deploy_env }}'."
+            exit 0
+          fi
+
+          echo "configured=true" >> "$GITHUB_OUTPUT"
+          echo "host=$DEPLOY_HOST_INPUT" >> "$GITHUB_OUTPUT"
+          echo "user=$DEPLOY_USER_INPUT" >> "$GITHUB_OUTPUT"
+          echo "path=${DEPLOY_PATH_INPUT:-/opt/simplix/portal-client}" >> "$GITHUB_OUTPUT"
+
+      - name: Deploy
+        if: ${{ steps.deploy_config.outputs.configured == 'true' }}
+        shell: bash
+        env:
+          REMOTE_HOST: ${{ steps.deploy_config.outputs.host }}
+          REMOTE_USER: ${{ steps.deploy_config.outputs.user }}
+          REMOTE_PATH: ${{ steps.deploy_config.outputs.path }}
           DEPLOY_ENV: ${{ needs.version.outputs.deploy_env }}
+          REGISTRY: ${{ env.REGISTRY }}
           IMAGE_TAG: ${{ needs.version.outputs.image_tag }}
-          REGISTRY_IMAGE: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}
-        run: ./scripts/ci/deploy-container.sh
+          REGISTRY_IMAGE: ${{ env.REGISTRY }}/${{ needs.version.outputs.image_name }}
+          REGISTRY_USERNAME: ${{ secrets.REGISTRY_USERNAME != '' && secrets.REGISTRY_USERNAME || vars.REGISTRY_USERNAME }}
+          REGISTRY_PASSWORD: ${{ secrets.REGISTRY_PASSWORD }}
+        run: bash ./scripts/ci/deploy-container.sh
+
+  deploy-remote:
+    runs-on: ubuntu-latest
+    needs:
+      - version
+      - publish-image
+    if: ${{ needs.version.outputs.deploy_env == 'prd' }}
+    environment: ${{ needs.version.outputs.deploy_env }}
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Prepare SSH key
+        if: ${{ secrets.DEPLOY_SSH_KEY != '' }}
+        shell: bash
+        run: |
+          mkdir -p ~/.ssh
+          echo "${{ secrets.DEPLOY_SSH_KEY }}" > ~/.ssh/id_ed25519
+          chmod 600 ~/.ssh/id_ed25519
+
+      - name: Validate deploy config
+        id: deploy_config
+        shell: bash
+        env:
+          DEPLOY_HOST_INPUT: ${{ secrets.DEPLOY_HOST != '' && secrets.DEPLOY_HOST || vars.DEPLOY_HOST }}
+          DEPLOY_USER_INPUT: ${{ secrets.DEPLOY_USER != '' && secrets.DEPLOY_USER || vars.DEPLOY_USER }}
+          DEPLOY_PATH_INPUT: ${{ secrets.DEPLOY_PATH != '' && secrets.DEPLOY_PATH || vars.DEPLOY_PATH }}
+          DEPLOY_SSH_KEY_INPUT: ${{ secrets.DEPLOY_SSH_KEY }}
+        run: |
+          if [ -z "$DEPLOY_HOST_INPUT" ] || [ -z "$DEPLOY_USER_INPUT" ] || [ -z "$DEPLOY_SSH_KEY_INPUT" ]; then
+            echo "configured=false" >> "$GITHUB_OUTPUT"
+            echo "Deploy skipped: missing DEPLOY_HOST, DEPLOY_USER or DEPLOY_SSH_KEY in environment '${{ needs.version.outputs.deploy_env }}'."
+            exit 0
+          fi
+
+          echo "configured=true" >> "$GITHUB_OUTPUT"
+          echo "host=$DEPLOY_HOST_INPUT" >> "$GITHUB_OUTPUT"
+          echo "user=$DEPLOY_USER_INPUT" >> "$GITHUB_OUTPUT"
+          echo "path=${DEPLOY_PATH_INPUT:-/opt/simplix/portal-client}" >> "$GITHUB_OUTPUT"
+
+      - name: Deploy
+        if: ${{ steps.deploy_config.outputs.configured == 'true' }}
+        shell: bash
+        env:
+          REMOTE_HOST: ${{ steps.deploy_config.outputs.host }}
+          REMOTE_USER: ${{ steps.deploy_config.outputs.user }}
+          REMOTE_PATH: ${{ steps.deploy_config.outputs.path }}
+          DEPLOY_ENV: ${{ needs.version.outputs.deploy_env }}
+          REGISTRY: ${{ env.REGISTRY }}
+          IMAGE_TAG: ${{ needs.version.outputs.image_tag }}
+          REGISTRY_IMAGE: ${{ env.REGISTRY }}/${{ needs.version.outputs.image_name }}
+          REGISTRY_USERNAME: ${{ secrets.REGISTRY_USERNAME != '' && secrets.REGISTRY_USERNAME || vars.REGISTRY_USERNAME }}
+          REGISTRY_PASSWORD: ${{ secrets.REGISTRY_PASSWORD }}
+        run: bash ./scripts/ci/deploy-container.sh

@@ -1,26 +1,11 @@
 # Infraestrutura Docker
 
-Base Linux local do ecossistema K.M.K.K.M com quatro servicos:
+O compose ativo do repositório foi movido para `./compose`, com uma base comum e overrides por ambiente.
 
-- `app`: aplicacao principal ASP.NET Core
-- `postgres`: banco PostgreSQL
-- `update`: servico de validacao de versoes e aprovacao administrativa
-- `openclaw-agent`: agente de IA para atendimento e triagem
+Consulte `docs/DEPLOY_LOCAL.md` para:
 
-## Subir o ambiente
+- comandos de `up`, `logs` e `down`
+- arquivos `.env` por ambiente
+- uso da rede externa `proxy` com Nginx Proxy Manager
 
-```powershell
-docker compose -f infra/docker/docker-compose.yml up --build
-```
-
-## Endpoints locais
-
-- Aplicacao: `http://localhost:8080`
-- Update service: `http://localhost:8081`
-- OpenClaw agent: `http://localhost:8082`
-- PostgreSQL: `localhost:5434`
-
-## Observacoes
-
-- `update` e `openclaw-agent` foram criados como mocks funcionais para preparar a comunicacao entre os servicos.
-- O proximo passo natural e trocar esses mocks por implementacoes reais ou projetos dedicados na solution.
+Os Dockerfiles de apoio permanecem em `infra/docker`, mas o compose legado desta pasta nao e mais o ponto de entrada recomendado.
