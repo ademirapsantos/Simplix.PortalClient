@@ -101,6 +101,7 @@ public static class InfrastructureServiceCollectionExtensions
         services.AddHttpContextAccessor();
         services.AddScoped<IPortalExperienceService, PortalExperienceService>();
         services.AddScoped<IClientWorkspaceService, ClientWorkspaceService>();
+        services.AddScoped<IClientSupportTicketService, ClientSupportTicketService>();
         services.AddScoped<IAdminWorkspaceService, AdminWorkspaceService>();
         services.AddScoped<ISecurityAuditService, SecurityAuditService>();
         services.AddHostedService<PortalClientDbContextInitializer>();

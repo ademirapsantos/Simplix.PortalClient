@@ -6,4 +6,5 @@ public interface IPortalExperienceService
 {
     Task<LandingPageViewModel> GetLandingPageAsync(CancellationToken cancellationToken);
     Task<StorePageViewModel> GetStorePageAsync(CancellationToken cancellationToken);
+    Task RegisterCommercialLeadAsync(CreateCommercialLeadCommand command, CancellationToken cancellationToken);
 }

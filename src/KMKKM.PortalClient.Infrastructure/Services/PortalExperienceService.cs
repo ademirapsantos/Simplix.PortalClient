@@ -65,8 +65,31 @@ internal sealed class PortalExperienceService : IPortalExperienceService
         var viewModel = new StorePageViewModel(
             "K.M.K.K.M Store",
             "Catalogo institucional dos aplicativos da startup. Nesta fase inicial a Store apresenta os produtos, posicionamento e status comercial.",
+            [
+                "Apresentacao objetiva da startup e do portfolio.",
+                "Catalogo publico para descoberta comercial sem depender de login.",
+                "Captura de interesse para conversas de venda e implantacao."
+            ],
             applications);
 
         return viewModel;
+    }
+
+    public async Task RegisterCommercialLeadAsync(CreateCommercialLeadCommand command, CancellationToken cancellationToken)
+    {
+        var lead = new KMKKM.PortalClient.Domain.Entities.CommercialLead
+        {
+            ContactName = command.ContactName.Trim(),
+            CompanyName = command.CompanyName.Trim(),
+            Email = command.Email.Trim(),
+            Phone = command.Phone.Trim(),
+            InterestedProduct = command.InterestedProduct.Trim(),
+            Message = command.Message.Trim(),
+            CreatedAtUtc = DateTime.UtcNow,
+            Status = "Novo"
+        };
+
+        _dbContext.CommercialLeads.Add(lead);
+        await _dbContext.SaveChangesAsync(cancellationToken);
     }
 }

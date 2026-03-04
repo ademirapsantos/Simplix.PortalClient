@@ -2,6 +2,7 @@ using System.Diagnostics;
 using KMKKM.PortalClient.Application.Contracts.Portal;
 using KMKKM.PortalClient.Application.Interfaces;
 using KMKKM.PortalClient.Web.Models;
+using KMKKM.PortalClient.Web.Models.Portal;
 using Microsoft.AspNetCore.Mvc;
 
 namespace KMKKM.PortalClient.Web.Controllers;
@@ -30,7 +31,32 @@ public class HomeController : Controller
     public async Task<IActionResult> Store(CancellationToken cancellationToken)
     {
         StorePageViewModel viewModel = await _portalExperienceService.GetStorePageAsync(cancellationToken);
-        return View(viewModel);
+        return View(new StorePageScreenViewModel(viewModel, new CommercialLeadFormViewModel()));
+    }
+
+    [HttpPost("store/lead")]
+    [ValidateAntiForgeryToken]
+    public async Task<IActionResult> CreateLead(CommercialLeadFormViewModel model, CancellationToken cancellationToken)
+    {
+        StorePageViewModel storeViewModel = await _portalExperienceService.GetStorePageAsync(cancellationToken);
+
+        if (!ModelState.IsValid)
+        {
+            return View("Store", new StorePageScreenViewModel(storeViewModel, model));
+        }
+
+        await _portalExperienceService.RegisterCommercialLeadAsync(
+            new CreateCommercialLeadCommand(
+                model.ContactName,
+                model.CompanyName,
+                model.Email,
+                model.Phone,
+                model.InterestedProduct,
+                model.Message),
+            cancellationToken);
+
+        TempData["StoreLeadCreated"] = true;
+        return RedirectToAction(nameof(Store));
     }
 
     [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]

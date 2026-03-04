@@ -1,52 +1,100 @@
 @model KMKKM.PortalClient.Application.Contracts.Client.ClientWorkspaceViewModel
 @{
     ViewData["Title"] = "Area do Cliente";
+    ViewData["UseWideShell"] = true;
 }
 
-<section class="dashboard-hero">
-    <div>
-        <span class="eyebrow">Cliente</span>
-        <h1>@Model.CustomerName</h1>
-        <p class="hero-description">Painel inicial para visualizacao das aplicacoes contratadas, upgrades, renovacoes e ordens de servico.</p>
-    </div>
-    <span class="tag">Fase 2 do roadmap</span>
-</section>
+<div class="client-dashboard">
+    <section class="dashboard-hero">
+        <div>
+            <span class="eyebrow">Cliente</span>
+            <h1>@Model.CustomerName</h1>
+            <p class="hero-description">Acompanhe licencas, renovacoes, upgrades e chamados em um unico painel.</p>
+        </div>
+        <span class="tag">Plano atual: @Model.CurrentPlan</span>
+    </section>
 
-<section class="workspace-grid">
-    <article class="workspace-card">
-        <h2>Aplicacoes ativas</h2>
-        <ul>
-            @foreach (var product in Model.ActiveProducts)
+    <section class="section-block">
+        <div class="section-heading">
+            <h2>Visao geral</h2>
+            <span>Proxima renovacao em @Model.NextRenewalDate.ToString("dd/MM/yyyy")</span>
+        </div>
+        <div class="stats-grid">
+            @foreach (var metric in Model.Metrics)
             {
-                <li>@product</li>
+                <article class="status-card">
+                    <h3>@metric.Label</h3>
+                    <strong>@metric.Value</strong>
+                    <p>@metric.Context</p>
+                </article>
             }
-        </ul>
-    </article>
-    <article class="workspace-card">
-        <h2>Upgrades disponiveis</h2>
-        <ul>
-            @foreach (var upgrade in Model.AvailableUpgrades)
+        </div>
+    </section>
+
+    <section class="section-block">
+        <div class="section-heading">
+            <h2>Licencas contratadas</h2>
+            <span>Status da operacao atual</span>
+        </div>
+        <div class="client-license-workspace-grid">
+            @foreach (var license in Model.Licenses)
             {
-                <li>@upgrade</li>
+                <article class="product-card">
+                    <span class="product-badge">@license.Status</span>
+                    <h3>@license.ProductName</h3>
+                    <p>Plano @license.PlanName</p>
+                    <div class="card-footer card-footer-column">
+                        <span>Renovacao</span>
+                        <strong>@license.ExpiresOn.ToString("dd/MM/yyyy")</strong>
+                    </div>
+                </article>
             }
-        </ul>
-    </article>
-    <article class="workspace-card">
-        <h2>Acoes pendentes</h2>
-        <ul>
-            @foreach (var actionItem in Model.PendingActions)
-            {
-                <li>@actionItem</li>
-            }
-        </ul>
-    </article>
-    <article class="workspace-card">
-        <h2>Ordens de servico recentes</h2>
-        <ul>
+
+            <article class="workspace-card">
+                <div class="section-heading section-heading-compact">
+                    <h2>Proximas acoes</h2>
+                    <span>Foco do cliente</span>
+                </div>
+                <ul>
+                    @foreach (var actionItem in Model.RecommendedActions)
+                    {
+                        <li>@actionItem</li>
+                    }
+                </ul>
+            </article>
+
+            <article class="workspace-card">
+                <div class="section-heading section-heading-compact">
+                    <h2>Upgrades sugeridos</h2>
+                    <span>Evolucao comercial</span>
+                </div>
+                <ul>
+                    @foreach (var upgrade in Model.AvailableUpgrades)
+                    {
+                        <li>@upgrade</li>
+                    }
+                </ul>
+            </article>
+        </div>
+    </section>
+
+    <section class="section-block">
+        <div class="section-heading">
+            <h2>Chamados recentes</h2>
+            <a asp-area="Client" asp-controller="SupportTickets" asp-action="Index">Abrir quadro de chamados</a>
+        </div>
+        <div class="card-grid">
             @foreach (var ticket in Model.RecentTickets)
             {
-                <li>@ticket</li>
+                <article class="workspace-card ticket-card">
+                    <div class="ticket-card-header">
+                        <span class="tag">@ticket.Category</span>
+                        <span class="ticket-status">@ticket.Status</span>
+                    </div>
+                    <h3>@ticket.Subject</h3>
+                    <p class="ticket-date">Criado em @ticket.CreatedAtUtc.ToLocalTime().ToString("dd/MM/yyyy HH:mm")</p>
+                </article>
             }
-        </ul>
-    </article>
-</section>
+        </div>
+    </section>
+</div>

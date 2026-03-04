@@ -1,0 +1,70 @@
+@model KMKKM.PortalClient.Web.Models.Client.CreateSupportTicketViewModel
+@using KMKKM.PortalClient.Domain.Constants
+@{
+    ViewData["Title"] = "Novo chamado";
+}
+
+<section class="dashboard-hero">
+    <div>
+        <span class="eyebrow">Novo chamado</span>
+        <h1>Abrir solicitacao</h1>
+        <p class="hero-description">O chamado nasce em <strong>Criado</strong> e entra no fluxo de atendimento da equipe.</p>
+    </div>
+    <a class="btn btn-outline-light" asp-action="Index">Voltar ao quadro</a>
+</section>
+
+<section class="auth-shell support-ticket-create-shell">
+    <div class="auth-card">
+        <form method="post" class="auth-form">
+            @Html.AntiForgeryToken()
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+
+            <div>
+                <label asp-for="Subject" class="form-label"></label>
+                <input asp-for="Subject" class="form-control" />
+                <span asp-validation-for="Subject" class="text-danger"></span>
+            </div>
+
+            <div>
+                <label asp-for="Description" class="form-label"></label>
+                <textarea asp-for="Description" class="form-control" rows="8"></textarea>
+                <span asp-validation-for="Description" class="text-danger"></span>
+            </div>
+
+            <div class="support-ticket-form-grid">
+                <div>
+                    <label asp-for="Category" class="form-label"></label>
+                    <select asp-for="Category" class="form-select">
+                        @foreach (var category in SupportTicketCategories.All)
+                        {
+                            <option value="@category">@category</option>
+                        }
+                    </select>
+                    <span asp-validation-for="Category" class="text-danger"></span>
+                </div>
+                <div>
+                    <label asp-for="Priority" class="form-label"></label>
+                    <select asp-for="Priority" class="form-select">
+                        @foreach (var priority in SupportTicketPriorities.All)
+                        {
+                            <option value="@priority">@priority</option>
+                        }
+                    </select>
+                    <span asp-validation-for="Priority" class="text-danger"></span>
+                </div>
+            </div>
+
+            <button type="submit" class="btn btn-primary btn-lg">Criar chamado</button>
+        </form>
+    </div>
+
+    <aside class="auth-aside">
+        <h2>Como o fluxo funciona</h2>
+        <p class="hero-description">O suporte prioriza e distribui os cards conforme tipo, urgencia e dependencia. O cliente acompanha o andamento no quadro.</p>
+        <p class="hero-description">O cliente pode encerrar diretamente um item ainda em <strong>Criado</strong> ou um item em <strong>Homologacao</strong> quando a validacao estiver concluida.</p>
+    </aside>
+</section>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+}

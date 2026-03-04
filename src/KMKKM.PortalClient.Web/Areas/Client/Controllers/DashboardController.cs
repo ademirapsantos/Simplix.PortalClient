@@ -19,7 +19,9 @@ public sealed class DashboardController : Controller
     [HttpGet]
     public async Task<IActionResult> Index(CancellationToken cancellationToken)
     {
-        var viewModel = await _clientWorkspaceService.GetWorkspaceAsync(cancellationToken);
+        string userEmail = User.Identity?.Name ?? string.Empty;
+        bool canViewAll = User.IsInRole(SystemRoles.Admin);
+        var viewModel = await _clientWorkspaceService.GetWorkspaceAsync(userEmail, canViewAll, cancellationToken);
         return View(viewModel);
     }
 }

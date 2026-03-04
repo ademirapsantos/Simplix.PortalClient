@@ -108,6 +108,7 @@ internal sealed class PortalClientDbContextInitializer : IHostedService
                 new CustomerLicense
                 {
                     CustomerName = "Cliente demonstracao",
+                    CustomerEmail = "cliente@kmkkm.local",
                     ProductName = "KMKKM Finance",
                     PlanName = "Growth",
                     ExpiresOn = new DateOnly(2026, 3, 15)
@@ -119,17 +120,51 @@ internal sealed class PortalClientDbContextInitializer : IHostedService
             dbContext.SupportTickets.AddRange(
                 new SupportTicket
                 {
+                    ReferenceNumber = "17482031",
                     Subject = "Correcao de regra fiscal",
-                    Category = "bug",
-                    Status = "Aberto",
-                    CreatedAtUtc = DateTime.UtcNow.AddDays(-2)
+                    Description = "A regra fiscal precisa ser revisada no fechamento mensal para o cliente demonstracao.",
+                    Category = SupportTicketCategories.Bug,
+                    Priority = SupportTicketPriorities.High,
+                    Status = SupportTicketStatuses.Development,
+                    CustomerName = "Cliente demonstracao",
+                    CustomerEmail = "cliente@kmkkm.local",
+                    CreatedByEmail = "cliente@kmkkm.local",
+                    AssignedAgentFullName = "Ademir Santos",
+                    CreatedAtUtc = DateTime.UtcNow.AddDays(-2),
+                    LastMovedAtUtc = DateTime.UtcNow.AddDays(-1),
+                    SlaTargetAtUtc = DateTime.UtcNow.AddHours(10)
                 },
                 new SupportTicket
                 {
+                    ReferenceNumber = "28473105",
                     Subject = "Novo campo em cadastro de clientes",
-                    Category = "customizacao",
-                    Status = "Em analise",
-                    CreatedAtUtc = DateTime.UtcNow.AddDays(-1)
+                    Description = "Cliente solicitou incluir um campo adicional no cadastro para refletir o processo interno.",
+                    Category = SupportTicketCategories.Customization,
+                    Priority = SupportTicketPriorities.Medium,
+                    Status = SupportTicketStatuses.Homologation,
+                    CustomerName = "Cliente demonstracao",
+                    CustomerEmail = "cliente@kmkkm.local",
+                    CreatedByEmail = "cliente@kmkkm.local",
+                    AssignedAgentFullName = "Ademir Santos",
+                    CreatedAtUtc = DateTime.UtcNow.AddDays(-1),
+                    LastMovedAtUtc = DateTime.UtcNow.AddHours(-8),
+                    SlaTargetAtUtc = DateTime.UtcNow.AddHours(18)
+                },
+                new SupportTicket
+                {
+                    ReferenceNumber = "59316428",
+                    Subject = "Duvida sobre fechamento financeiro",
+                    Description = "Cliente precisa confirmar o fluxo esperado de fechamento antes de seguir com a operacao.",
+                    Category = SupportTicketCategories.BusinessRule,
+                    Priority = SupportTicketPriorities.Low,
+                    Status = SupportTicketStatuses.Created,
+                    CustomerName = "Cliente demonstracao",
+                    CustomerEmail = "cliente@kmkkm.local",
+                    CreatedByEmail = "cliente@kmkkm.local",
+                    AssignedAgentFullName = "Aguardando triagem",
+                    CreatedAtUtc = DateTime.UtcNow.AddHours(-12),
+                    LastMovedAtUtc = DateTime.UtcNow.AddHours(-12),
+                    SlaTargetAtUtc = DateTime.UtcNow.AddHours(36)
                 });
         }
 

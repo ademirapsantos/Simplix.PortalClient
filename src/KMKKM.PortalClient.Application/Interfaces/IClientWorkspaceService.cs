@@ -4,5 +4,5 @@ namespace KMKKM.PortalClient.Application.Interfaces;
 
 public interface IClientWorkspaceService
 {
-    Task<ClientWorkspaceViewModel> GetWorkspaceAsync(CancellationToken cancellationToken);
+    Task<ClientWorkspaceViewModel> GetWorkspaceAsync(string userEmail, bool canViewAll, CancellationToken cancellationToken);
 }

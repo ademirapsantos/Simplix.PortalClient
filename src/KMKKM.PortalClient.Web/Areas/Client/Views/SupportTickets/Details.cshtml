@@ -1,0 +1,57 @@
+@model KMKKM.PortalClient.Application.Contracts.Client.ClientSupportTicketDetailsViewModel
+@using KMKKM.PortalClient.Domain.Constants
+@{
+    ViewData["Title"] = "Detalhe do chamado";
+}
+
+<section class="dashboard-hero">
+    <div>
+        <span class="eyebrow">Chamado</span>
+        <h1>@Model.Subject</h1>
+        <p class="hero-description">Chamado #@Model.ReferenceNumber. Acompanhamento completo do card dentro do fluxo do cliente.</p>
+    </div>
+    <span class="tag">@Model.Status</span>
+</section>
+
+<section class="workspace-grid">
+    <article class="workspace-card">
+        <div class="section-heading section-heading-compact">
+            <h2>Resumo</h2>
+            <span>@Model.Priority</span>
+        </div>
+        <p>@Model.Description</p>
+        <ul>
+            <li>Tipo: @Model.Category</li>
+            <li>Cliente: @Model.CustomerName</li>
+            <li>E-mail vinculado: @Model.CustomerEmail</li>
+            <li>Responsavel pelo atendimento: @Model.AssignedAgentFullName</li>
+            <li>SLA alvo: @Model.SlaTargetAtUtc.ToLocalTime().ToString("dd/MM/yyyy HH:mm")</li>
+            <li>Status do SLA: @Model.SlaLabel</li>
+            <li>Criado em: @Model.CreatedAtUtc.ToLocalTime().ToString("dd/MM/yyyy HH:mm")</li>
+            <li>Ultima movimentacao: @Model.LastMovedAtUtc.ToLocalTime().ToString("dd/MM/yyyy HH:mm")</li>
+        </ul>
+    </article>
+
+    <article class="workspace-card">
+        <div class="section-heading section-heading-compact">
+            <h2>Acoes disponiveis</h2>
+            <span>Cliente</span>
+        </div>
+
+        @if (Model.CanClientMoveToCompleted)
+        {
+            <form method="post" asp-action="Move" class="auth-form">
+                @Html.AntiForgeryToken()
+                <input type="hidden" name="ticketId" value="@Model.Id" />
+                <input type="hidden" name="targetStatus" value="@SupportTicketStatuses.Completed" />
+                <button type="submit" class="btn btn-primary">Marcar como concluido</button>
+            </form>
+        }
+        else
+        {
+            <p class="hero-description">Este card nao pode ser movido pelo cliente nesta etapa. O time interno segue com a tratativa.</p>
+        }
+
+        <a class="auth-link" asp-action="Index">Voltar ao quadro</a>
+    </article>
+</section>

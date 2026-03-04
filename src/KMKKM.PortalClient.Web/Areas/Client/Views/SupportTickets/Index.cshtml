@@ -1,0 +1,74 @@
+@model KMKKM.PortalClient.Application.Contracts.Client.ClientSupportTicketBoardViewModel
+@using KMKKM.PortalClient.Domain.Constants
+@{
+    ViewData["Title"] = "Chamados";
+    ViewData["UseWideShell"] = true;
+}
+
+<div class="kanban-page">
+    <section class="dashboard-hero dashboard-hero-compact">
+        <div>
+            <span class="eyebrow">Chamados</span>
+            <h1>Quadro de atendimento</h1>
+            <p class="hero-description">Cada cliente acompanha apenas os proprios cards. O cliente pode concluir itens em <strong>Criado</strong> ou <strong>Homologacao</strong>.</p>
+        </div>
+        <div class="hero-actions">
+            <a class="btn btn-primary" asp-action="Create">Criar chamado</a>
+            <a class="btn btn-outline-light" asp-controller="Dashboard" asp-action="Index">Voltar ao painel</a>
+        </div>
+    </section>
+
+    <form id="ticket-move-form" method="post" asp-action="Move" class="d-none">
+        @Html.AntiForgeryToken()
+        <input type="hidden" name="ticketId" id="ticket-move-id" />
+        <input type="hidden" name="targetStatus" id="ticket-move-status" />
+    </form>
+
+    <section class="kanban-shell" data-ticket-board data-can-manage-workflow="@(Model.CanManageWorkflow.ToString().ToLowerInvariant())">
+        @foreach (var column in Model.Columns)
+        {
+            <article class="kanban-column" data-ticket-column data-status="@column.Status">
+                <header class="kanban-column-header">
+                    <div>
+                        <span class="kanban-column-title">@column.Title</span>
+                        <strong>@column.Cards.Count</strong>
+                    </div>
+                    <p>@column.Description</p>
+                </header>
+
+                <div class="kanban-card-list">
+                    @foreach (var card in column.Cards)
+                    {
+                        string detailUrl = Url.Action("Details", "SupportTickets", new { area = "Client", ticketId = card.Id }) ?? "#";
+                        <article class="kanban-card"
+                                 draggable="true"
+                                 data-ticket-card
+                                 data-ticket-id="@card.Id"
+                                 data-ticket-status="@card.Status"
+                                 data-can-client-complete="@(card.CanClientMoveToCompleted.ToString().ToLowerInvariant())"
+                                 data-detail-url="@detailUrl">
+                            <div class="kanban-card-reference">Chamado #@card.ReferenceNumber</div>
+                            <div class="kanban-card-head">
+                                <span class="ticket-chip">@card.Category</span>
+                                <span class="ticket-chip ticket-priority ticket-priority-@card.Priority.ToLowerInvariant().Replace(" ", "-")">@card.Priority</span>
+                            </div>
+                            <h3>@card.Subject</h3>
+                            <div class="kanban-card-meta-stack">
+                                <p class="kanban-card-meta">Responsavel: @card.AssignedAgentFullName</p>
+                                <p class="kanban-card-meta">Cliente: @card.CustomerName</p>
+                            </div>
+                            <div class="kanban-card-sla-row">
+                                <span class="ticket-chip ticket-chip-muted">SLA ate @card.SlaTargetAtUtc.ToLocalTime().ToString("dd/MM HH:mm")</span>
+                                <span class="ticket-chip ticket-sla ticket-sla-@card.SlaTone">@card.SlaLabel</span>
+                            </div>
+                            <div class="kanban-card-foot">
+                                <span>Criado em @card.CreatedAtUtc.ToLocalTime().ToString("dd/MM HH:mm")</span>
+                                <span>Atualizado @card.LastMovedAtUtc.ToLocalTime().ToString("dd/MM HH:mm")</span>
+                            </div>
+                        </article>
+                    }
+                </div>
+            </article>
+        }
+    </section>
+</div>

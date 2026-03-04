@@ -1,6 +1,7 @@
 using KMKKM.PortalClient.Infrastructure.Identity;
 using KMKKM.PortalClient.Infrastructure.Options;
 using KMKKM.PortalClient.Infrastructure.Services;
+using KMKKM.PortalClient.Domain.Constants;
 using KMKKM.PortalClient.Web.Models.Account;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
@@ -39,7 +40,7 @@ public sealed class AccountController : Controller
     {
         if (User.Identity?.IsAuthenticated == true)
         {
-            return RedirectToAction("Index", "Home");
+            return RedirectToUserWorkspace();
         }
 
         return View(new LoginViewModel { ReturnUrl = returnUrl });
@@ -90,7 +91,7 @@ public sealed class AccountController : Controller
             return Redirect(model.ReturnUrl);
         }
 
-        return RedirectToAction("Index", "Home");
+        return RedirectToUserWorkspace();
     }
 
     [HttpPost]
@@ -279,5 +280,22 @@ public sealed class AccountController : Controller
                    Request.Scheme,
                    Request.Host.ToUriComponent())
                ?? string.Empty;
+    }
+
+    private IActionResult RedirectToUserWorkspace()
+    {
+        if (User.IsInRole(SystemRoles.Admin) ||
+            User.IsInRole(SystemRoles.Sales) ||
+            User.IsInRole(SystemRoles.Support))
+        {
+            return RedirectToAction("Index", "Dashboard", new { area = "Admin" });
+        }
+
+        if (User.IsInRole(SystemRoles.Client))
+        {
+            return RedirectToAction("Index", "Dashboard", new { area = "Client" });
+        }
+
+        return RedirectToAction("Index", "Home");
     }
 }

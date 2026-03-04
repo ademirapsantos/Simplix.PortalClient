@@ -15,6 +15,7 @@ public sealed class PortalClientDbContext : IdentityDbContext<ApplicationUser, A
 
     public DbSet<Product> Products => Set<Product>();
     public DbSet<CommercialPlan> CommercialPlans => Set<CommercialPlan>();
+    public DbSet<CommercialLead> CommercialLeads => Set<CommercialLead>();
     public DbSet<CustomerLicense> CustomerLicenses => Set<CustomerLicense>();
     public DbSet<SupportTicket> SupportTickets => Set<SupportTicket>();
 
@@ -24,6 +25,7 @@ public sealed class PortalClientDbContext : IdentityDbContext<ApplicationUser, A
 
         modelBuilder.ApplyConfiguration(new ProductConfiguration());
         modelBuilder.ApplyConfiguration(new CommercialPlanConfiguration());
+        modelBuilder.ApplyConfiguration(new CommercialLeadConfiguration());
         modelBuilder.ApplyConfiguration(new CustomerLicenseConfiguration());
         modelBuilder.ApplyConfiguration(new SupportTicketConfiguration());
     }

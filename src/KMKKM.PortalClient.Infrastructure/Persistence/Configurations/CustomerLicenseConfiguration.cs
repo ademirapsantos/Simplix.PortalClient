@@ -12,7 +12,10 @@ internal sealed class CustomerLicenseConfiguration : IEntityTypeConfiguration<Cu
         builder.HasKey(x => x.Id);
 
         builder.Property(x => x.CustomerName).HasMaxLength(150).IsRequired();
+        builder.Property(x => x.CustomerEmail).HasMaxLength(180).IsRequired();
         builder.Property(x => x.ProductName).HasMaxLength(150).IsRequired();
         builder.Property(x => x.PlanName).HasMaxLength(120).IsRequired();
+
+        builder.HasIndex(x => x.CustomerEmail);
     }
 }
