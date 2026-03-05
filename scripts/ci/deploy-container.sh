@@ -50,7 +50,8 @@ tar czf - compose infra/docker/update-service | ssh -o StrictHostKeyChecking=no 
 "
 
 ssh -o StrictHostKeyChecking=no -p "$REMOTE_PORT" "$REMOTE_USER@$REMOTE_HOST" "
-  mkdir -p '$REMOTE_PATH/compose' &&
+  set -eu
+  mkdir -p '$REMOTE_PATH/compose'
   cat > '$REMOTE_PATH/compose/update-manifest.json' <<'EOF'
 {
   \"service\": \"portal-client\",
@@ -63,17 +64,17 @@ ssh -o StrictHostKeyChecking=no -p "$REMOTE_PORT" "$REMOTE_USER@$REMOTE_HOST" "
 }
 EOF
 
-  cd '$REMOTE_PATH' &&
-  export UPDATE_CURRENT_VERSION='$IMAGE_TAG' &&
-  export UPDATE_TARGET_VERSION='$IMAGE_TAG' &&
-  export UPDATE_CURRENT_COMMIT='$SOURCE_REVISION' &&
-  export DEPLOY_ENV='$DEPLOY_ENV' &&
-  export REGISTRY_IMAGE='$REGISTRY_IMAGE' &&
-  export IMAGE_TAG='$IMAGE_TAG' &&
+  cd '$REMOTE_PATH'
+  export UPDATE_CURRENT_VERSION='$IMAGE_TAG'
+  export UPDATE_TARGET_VERSION='$IMAGE_TAG'
+  export UPDATE_CURRENT_COMMIT='$SOURCE_REVISION'
+  export DEPLOY_ENV='$DEPLOY_ENV'
+  export REGISTRY_IMAGE='$REGISTRY_IMAGE'
+  export IMAGE_TAG='$IMAGE_TAG'
   if [ -n '$REGISTRY_USERNAME' ] && [ -n '$REGISTRY_PASSWORD' ]; then
-    printf '%s\n' '$REGISTRY_PASSWORD' | docker login '$REGISTRY' -u '$REGISTRY_USERNAME' --password-stdin &&
-  fi &&
-  docker compose --env-file '$ENV_FILE' -f '$COMPOSE_FILE_BASE' -f '$COMPOSE_FILE_OVERRIDE' pull app &&
-  docker compose --env-file '$ENV_FILE' -f '$COMPOSE_FILE_BASE' -f '$COMPOSE_FILE_OVERRIDE' up -d --no-build app postgres &&
+    printf '%s\n' '$REGISTRY_PASSWORD' | docker login '$REGISTRY' -u '$REGISTRY_USERNAME' --password-stdin
+  fi
+  docker compose --env-file '$ENV_FILE' -f '$COMPOSE_FILE_BASE' -f '$COMPOSE_FILE_OVERRIDE' pull app
+  docker compose --env-file '$ENV_FILE' -f '$COMPOSE_FILE_BASE' -f '$COMPOSE_FILE_OVERRIDE' up -d --no-build app postgres
   docker compose --env-file '$ENV_FILE' -f '$COMPOSE_FILE_BASE' -f '$COMPOSE_FILE_OVERRIDE' up -d --build update
 "
