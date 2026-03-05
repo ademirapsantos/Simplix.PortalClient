@@ -17,7 +17,10 @@ env:
 
 jobs:
   version:
-    runs-on: ubuntu-latest
+    runs-on:
+      - self-hosted
+      - Linux
+      - X64
     outputs:
       version: ${{ steps.meta.outputs.version }}
       assembly_version: ${{ steps.meta.outputs.assembly_version }}
@@ -58,7 +61,10 @@ jobs:
           }
 
   build:
-    runs-on: ubuntu-latest
+    runs-on:
+      - self-hosted
+      - Linux
+      - X64
     needs: version
     steps:
       - uses: actions/checkout@v4
@@ -84,7 +90,10 @@ jobs:
         run: dotnet test Simplix.PortalClient.sln --configuration Release --no-build
 
   publish-image:
-    runs-on: ubuntu-latest
+    runs-on:
+      - self-hosted
+      - Linux
+      - X64
     needs:
       - version
       - build
@@ -175,7 +184,10 @@ jobs:
         run: bash ./scripts/ci/deploy-container.sh
 
   deploy-remote:
-    runs-on: ubuntu-latest
+    runs-on:
+      - self-hosted
+      - Linux
+      - X64
     needs:
       - version
       - publish-image
