@@ -4,6 +4,7 @@ set -eu
 REMOTE_HOST="${REMOTE_HOST:-}"
 REMOTE_USER="${REMOTE_USER:-}"
 REMOTE_PATH="${REMOTE_PATH:-/opt/simplix/portal-client}"
+REMOTE_PORT="${REMOTE_PORT:-22}"
 DEPLOY_ENV="${DEPLOY_ENV:-dev}"
 REGISTRY="${REGISTRY:-ghcr.io}"
 REGISTRY_IMAGE="${REGISTRY_IMAGE:-}"
@@ -43,12 +44,12 @@ if [ -z "$REGISTRY_IMAGE" ] || [ -z "$IMAGE_TAG" ]; then
   exit 1
 fi
 
-tar czf - compose infra/docker/update-service | ssh -o StrictHostKeyChecking=no "$REMOTE_USER@$REMOTE_HOST" "
+tar czf - compose infra/docker/update-service | ssh -o StrictHostKeyChecking=no -p "$REMOTE_PORT" "$REMOTE_USER@$REMOTE_HOST" "
   mkdir -p '$REMOTE_PATH' &&
   tar xzf - -C '$REMOTE_PATH'
 "
 
-ssh -o StrictHostKeyChecking=no "$REMOTE_USER@$REMOTE_HOST" "
+ssh -o StrictHostKeyChecking=no -p "$REMOTE_PORT" "$REMOTE_USER@$REMOTE_HOST" "
   mkdir -p '$REMOTE_PATH/compose' &&
   cat > '$REMOTE_PATH/compose/update-manifest.json' <<'EOF'
 {

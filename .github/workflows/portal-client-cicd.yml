@@ -155,6 +155,7 @@ jobs:
           DEPLOY_HOST_INPUT: ${{ secrets.DEPLOY_HOST != '' && secrets.DEPLOY_HOST || vars.DEPLOY_HOST }}
           DEPLOY_USER_INPUT: ${{ secrets.DEPLOY_USER != '' && secrets.DEPLOY_USER || vars.DEPLOY_USER }}
           DEPLOY_PATH_INPUT: ${{ secrets.DEPLOY_PATH != '' && secrets.DEPLOY_PATH || vars.DEPLOY_PATH }}
+          DEPLOY_PORT_INPUT: ${{ secrets.DEPLOY_PORT != '' && secrets.DEPLOY_PORT || vars.DEPLOY_PORT }}
           DEPLOY_SSH_KEY_INPUT: ${{ secrets.DEPLOY_SSH_KEY }}
         run: |
           if [ -z "$DEPLOY_HOST_INPUT" ] || [ -z "$DEPLOY_USER_INPUT" ] || [ -z "$DEPLOY_SSH_KEY_INPUT" ]; then
@@ -167,6 +168,7 @@ jobs:
           echo "host=$DEPLOY_HOST_INPUT" >> "$GITHUB_OUTPUT"
           echo "user=$DEPLOY_USER_INPUT" >> "$GITHUB_OUTPUT"
           echo "path=${DEPLOY_PATH_INPUT:-/opt/simplix/portal-client}" >> "$GITHUB_OUTPUT"
+          echo "port=${DEPLOY_PORT_INPUT:-22}" >> "$GITHUB_OUTPUT"
 
       - name: Deploy
         if: ${{ steps.deploy_config.outputs.configured == 'true' }}
@@ -175,6 +177,7 @@ jobs:
           REMOTE_HOST: ${{ steps.deploy_config.outputs.host }}
           REMOTE_USER: ${{ steps.deploy_config.outputs.user }}
           REMOTE_PATH: ${{ steps.deploy_config.outputs.path }}
+          REMOTE_PORT: ${{ steps.deploy_config.outputs.port }}
           DEPLOY_ENV: ${{ needs.version.outputs.deploy_env }}
           REGISTRY: ${{ env.REGISTRY }}
           IMAGE_TAG: ${{ needs.version.outputs.image_tag }}
@@ -218,6 +221,7 @@ jobs:
           DEPLOY_HOST_INPUT: ${{ secrets.DEPLOY_HOST != '' && secrets.DEPLOY_HOST || vars.DEPLOY_HOST }}
           DEPLOY_USER_INPUT: ${{ secrets.DEPLOY_USER != '' && secrets.DEPLOY_USER || vars.DEPLOY_USER }}
           DEPLOY_PATH_INPUT: ${{ secrets.DEPLOY_PATH != '' && secrets.DEPLOY_PATH || vars.DEPLOY_PATH }}
+          DEPLOY_PORT_INPUT: ${{ secrets.DEPLOY_PORT != '' && secrets.DEPLOY_PORT || vars.DEPLOY_PORT }}
           DEPLOY_SSH_KEY_INPUT: ${{ secrets.DEPLOY_SSH_KEY }}
         run: |
           if [ -z "$DEPLOY_HOST_INPUT" ] || [ -z "$DEPLOY_USER_INPUT" ] || [ -z "$DEPLOY_SSH_KEY_INPUT" ]; then
@@ -230,6 +234,7 @@ jobs:
           echo "host=$DEPLOY_HOST_INPUT" >> "$GITHUB_OUTPUT"
           echo "user=$DEPLOY_USER_INPUT" >> "$GITHUB_OUTPUT"
           echo "path=${DEPLOY_PATH_INPUT:-/opt/simplix/portal-client}" >> "$GITHUB_OUTPUT"
+          echo "port=${DEPLOY_PORT_INPUT:-22}" >> "$GITHUB_OUTPUT"
 
       - name: Deploy
         if: ${{ steps.deploy_config.outputs.configured == 'true' }}
@@ -238,6 +243,7 @@ jobs:
           REMOTE_HOST: ${{ steps.deploy_config.outputs.host }}
           REMOTE_USER: ${{ steps.deploy_config.outputs.user }}
           REMOTE_PATH: ${{ steps.deploy_config.outputs.path }}
+          REMOTE_PORT: ${{ steps.deploy_config.outputs.port }}
           DEPLOY_ENV: ${{ needs.version.outputs.deploy_env }}
           REGISTRY: ${{ env.REGISTRY }}
           IMAGE_TAG: ${{ needs.version.outputs.image_tag }}
