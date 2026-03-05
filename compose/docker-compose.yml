@@ -20,6 +20,7 @@ services:
       SeedUsers__Client__Password: ${SEED_CLIENT_PASSWORD}
       PasswordReset__Enabled: ${PASSWORD_RESET_ENABLED:-true}
       PasswordReset__PublicOrigin: ${PORTAL_PUBLIC_ORIGIN}
+      Authentication__CookieSecurePolicy: ${AUTH_COOKIE_SECURE_POLICY:-Always}
       DatabaseInitialization__Enabled: ${DB_INIT_ENABLED:-false}
       DatabaseInitialization__ApplySchemaChanges: ${DB_INIT_APPLY_SCHEMA_CHANGES:-false}
       DatabaseInitialization__SeedData: ${DB_INIT_SEED_DATA:-false}

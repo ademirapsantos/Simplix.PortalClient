@@ -81,10 +81,18 @@ public static class InfrastructureServiceCollectionExtensions
 
         services.ConfigureApplicationCookie(options =>
         {
+            CookieSecurePolicy cookieSecurePolicy = CookieSecurePolicy.Always;
+            string? cookieSecurePolicyValue = configuration["Authentication:CookieSecurePolicy"];
+            if (!string.IsNullOrWhiteSpace(cookieSecurePolicyValue) &&
+                Enum.TryParse(cookieSecurePolicyValue, ignoreCase: true, out CookieSecurePolicy parsedCookieSecurePolicy))
+            {
+                cookieSecurePolicy = parsedCookieSecurePolicy;
+            }
+
             options.Cookie.Name = "Simplix.PortalClient.Auth";
             options.Cookie.HttpOnly = true;
             options.Cookie.SameSite = SameSiteMode.Lax;
-            options.Cookie.SecurePolicy = CookieSecurePolicy.Always;
+            options.Cookie.SecurePolicy = cookieSecurePolicy;
             options.LoginPath = "/account/login";
             options.AccessDeniedPath = "/account/access-denied";
             options.ExpireTimeSpan = TimeSpan.FromHours(8);
