@@ -162,6 +162,8 @@ jobs:
           DEPLOY_ENV: ${{ needs.version.outputs.deploy_env }}
           REGISTRY: ${{ env.REGISTRY }}
           IMAGE_TAG: ${{ needs.version.outputs.image_tag }}
+          SOURCE_REVISION: ${{ github.sha }}
+          GIT_BRANCH: ${{ needs.version.outputs.git_branch }}
           REGISTRY_IMAGE: ${{ env.REGISTRY }}/${{ needs.version.outputs.image_name }}
           REGISTRY_USERNAME: ${{ secrets.REGISTRY_USERNAME != '' && secrets.REGISTRY_USERNAME || vars.REGISTRY_USERNAME }}
           REGISTRY_PASSWORD: ${{ secrets.REGISTRY_PASSWORD }}
@@ -215,6 +217,8 @@ jobs:
           DEPLOY_ENV: ${{ needs.version.outputs.deploy_env }}
           REGISTRY: ${{ env.REGISTRY }}
           IMAGE_TAG: ${{ needs.version.outputs.image_tag }}
+          SOURCE_REVISION: ${{ github.sha }}
+          GIT_BRANCH: ${{ needs.version.outputs.git_branch }}
           REGISTRY_IMAGE: ${{ env.REGISTRY }}/${{ needs.version.outputs.image_name }}
           REGISTRY_USERNAME: ${{ secrets.REGISTRY_USERNAME != '' && secrets.REGISTRY_USERNAME || vars.REGISTRY_USERNAME }}
           REGISTRY_PASSWORD: ${{ secrets.REGISTRY_PASSWORD }}

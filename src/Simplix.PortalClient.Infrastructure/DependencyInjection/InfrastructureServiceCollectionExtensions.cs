@@ -20,6 +20,7 @@ public static class InfrastructureServiceCollectionExtensions
         services.Configure<OpenClawOptions>(configuration.GetSection(OpenClawOptions.SectionName));
         services.Configure<UpdateServerOptions>(configuration.GetSection(UpdateServerOptions.SectionName));
         services.Configure<SeedUsersOptions>(configuration.GetSection(SeedUsersOptions.SectionName));
+        services.Configure<DatabaseInitializationOptions>(configuration.GetSection(DatabaseInitializationOptions.SectionName));
         services.Configure<PasswordResetOptions>(configuration.GetSection(PasswordResetOptions.SectionName));
 
         PasswordResetOptions passwordResetOptions =
@@ -109,4 +110,3 @@ public static class InfrastructureServiceCollectionExtensions
         return services;
     }
 }
-

@@ -19,6 +19,10 @@ services:
       SeedUsers__Client__Password: ${SEED_CLIENT_PASSWORD}
       PasswordReset__Enabled: ${PASSWORD_RESET_ENABLED:-true}
       PasswordReset__PublicOrigin: ${PORTAL_PUBLIC_ORIGIN}
+      DatabaseInitialization__Enabled: ${DB_INIT_ENABLED:-false}
+      DatabaseInitialization__ApplySchemaChanges: ${DB_INIT_APPLY_SCHEMA_CHANGES:-false}
+      DatabaseInitialization__SeedData: ${DB_INIT_SEED_DATA:-false}
+      DatabaseInitialization__SeedIdentity: ${DB_INIT_SEED_IDENTITY:-false}
     expose:
       - "8080"
     depends_on:
@@ -66,10 +70,14 @@ services:
       UPDATE_TARGET_VERSION: ${UPDATE_TARGET_VERSION}
       UPDATE_CHANNEL: ${UPDATE_CHANNEL}
       UPDATE_REQUIRES_ADMIN_APPROVAL: ${UPDATE_REQUIRES_ADMIN_APPROVAL}
+      UPDATE_CURRENT_COMMIT: ${UPDATE_CURRENT_COMMIT}
       UPDATE_GIT_PROVIDER: ${UPDATE_GIT_PROVIDER}
       UPDATE_GIT_REPOSITORY: ${UPDATE_GIT_REPOSITORY}
       UPDATE_GIT_BRANCH: ${UPDATE_GIT_BRANCH}
       UPDATE_GIT_TOKEN: ${UPDATE_GIT_TOKEN}
+      UPDATE_MANIFEST_PATH: /app/manifest/update-manifest.json
+    volumes:
+      - ./compose/update-manifest.json:/app/manifest/update-manifest.json:ro
     expose:
       - "8081"
     healthcheck:
@@ -91,4 +99,3 @@ networks:
 volumes:
   postgres-data:
     name: ${POSTGRES_VOLUME_NAME}
-

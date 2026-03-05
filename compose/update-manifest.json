@@ -1,0 +1,9 @@
+{
+  "service": "portal-client",
+  "channel": "dev",
+  "currentVersion": "0.1.0",
+  "targetVersion": "0.1.0",
+  "currentCommit": "",
+  "buildBranch": "dev",
+  "deployedAtUtc": "1970-01-01T00:00:00Z"
+}

@@ -16,28 +16,48 @@ internal sealed class PortalClientDbContextInitializer : IHostedService
     private readonly IServiceProvider _serviceProvider;
     private readonly ILogger<PortalClientDbContextInitializer> _logger;
     private readonly SeedUsersOptions _seedUsersOptions;
+    private readonly DatabaseInitializationOptions _databaseInitializationOptions;
 
     public PortalClientDbContextInitializer(
         IServiceProvider serviceProvider,
         ILogger<PortalClientDbContextInitializer> logger,
-        IOptions<SeedUsersOptions> seedUsersOptions)
+        IOptions<SeedUsersOptions> seedUsersOptions,
+        IOptions<DatabaseInitializationOptions> databaseInitializationOptions)
     {
         _serviceProvider = serviceProvider;
         _logger = logger;
         _seedUsersOptions = seedUsersOptions.Value;
+        _databaseInitializationOptions = databaseInitializationOptions.Value;
     }
 
     public async Task StartAsync(CancellationToken cancellationToken)
     {
+        if (!_databaseInitializationOptions.Enabled)
+        {
+            _logger.LogInformation("Database initialization on startup is disabled.");
+            return;
+        }
+
         await using var scope = _serviceProvider.CreateAsyncScope();
         var dbContext = scope.ServiceProvider.GetRequiredService<PortalClientDbContext>();
         var roleManager = scope.ServiceProvider.GetRequiredService<RoleManager<ApplicationRole>>();
         var userManager = scope.ServiceProvider.GetRequiredService<UserManager<ApplicationUser>>();
 
-        _logger.LogInformation("Ensuring PostgreSQL schema is available.");
-        await dbContext.Database.EnsureCreatedAsync(cancellationToken);
-        await SeedAsync(dbContext, cancellationToken);
-        await SeedIdentityAsync(roleManager, userManager);
+        if (_databaseInitializationOptions.ApplySchemaChanges)
+        {
+            _logger.LogInformation("Ensuring PostgreSQL schema is available.");
+            await dbContext.Database.EnsureCreatedAsync(cancellationToken);
+        }
+
+        if (_databaseInitializationOptions.SeedData)
+        {
+            await SeedAsync(dbContext, cancellationToken);
+        }
+
+        if (_databaseInitializationOptions.SeedIdentity)
+        {
+            await SeedIdentityAsync(roleManager, userManager);
+        }
     }
 
     public Task StopAsync(CancellationToken cancellationToken)
@@ -334,4 +354,3 @@ internal sealed class PortalClientDbContextInitializer : IHostedService
         }
     }
 }
-
