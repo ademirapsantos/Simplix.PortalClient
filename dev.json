@@ -1,8 +1,8 @@
 {
-  "version": "1.0.8-dev.d68cdda",
-  "latest_version": "1.0.8-dev.d68cdda",
-  "tag": "1.0.8-dev.d68cdda",
-  "commit": "d68cdda2342ce58a52d372cec0485d973f57f0ea",
-  "date": "2026-03-05T19:03:32Z",
+  "version": "1.0.9-dev.2d7578f",
+  "latest_version": "1.0.9-dev.2d7578f",
+  "tag": "1.0.9-dev.2d7578f",
+  "commit": "2d7578f81e2ce9f6726ef020433af9962257d590",
+  "date": "2026-03-05T19:47:29Z",
   "environment": "dev"
 }
