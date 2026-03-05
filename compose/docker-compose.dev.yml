@@ -1,6 +1,10 @@
 services:
   app:
     environment:
+      PasswordReset__Enabled: ${PASSWORD_RESET_ENABLED:-true}
+      PasswordReset__PublicOrigin: ${PORTAL_PUBLIC_ORIGIN}
+      Authentication__CookieSecurePolicy: ${AUTH_COOKIE_SECURE_POLICY:-Always}
+      DatabaseInitialization__Enabled: ${DB_INIT_ENABLED:-false}
       ASPNETCORE_ENVIRONMENT: Development
     ports:
       - "8080:8080"

@@ -81,7 +81,7 @@ public static class InfrastructureServiceCollectionExtensions
 
         services.ConfigureApplicationCookie(options =>
         {
-            CookieSecurePolicy cookieSecurePolicy = CookieSecurePolicy.Always;
+            CookieSecurePolicy cookieSecurePolicy = CookieSecurePolicy.None;
             string? cookieSecurePolicyValue = configuration["Authentication:CookieSecurePolicy"]?.Trim();
             if (!string.IsNullOrWhiteSpace(cookieSecurePolicyValue) &&
                 Enum.TryParse(cookieSecurePolicyValue, ignoreCase: true, out CookieSecurePolicy parsedCookieSecurePolicy))
