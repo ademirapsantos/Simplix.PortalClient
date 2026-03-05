@@ -1,0 +1,73 @@
+@model Simplix.PortalClient.Web.Models.Portal.CommercialLeadFormViewModel
+@{
+    ViewData["Title"] = "Interesse Comercial";
+    ViewData["ShellMode"] = "public";
+    bool leadCreated = TempData["StoreLeadCreated"] as bool? ?? false;
+}
+
+<section class="section-block store-interest-page">
+    <div class="store-interest-shell">
+        <div class="section-heading store-interest-heading">
+            <div>
+                <span class="section-kicker">Captura de interesse</span>
+                <h2>Transforme visita em conversa comercial</h2>
+            </div>
+        </div>
+
+        <article class="workspace-card store-interest-card">
+            @if (leadCreated)
+            {
+                <div class="store-lead-success">
+                    <span class="tag">Lead registrado</span>
+                    <p>Recebemos seu interesse. O proximo passo agora e a equipe comercial entrar em contato.</p>
+                </div>
+            }
+
+            <form method="post" asp-action="CreateLead" class="auth-form">
+                @Html.AntiForgeryToken()
+                <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+
+                <div class="store-lead-grid">
+                    <div>
+                        <label asp-for="ContactName" class="form-label"></label>
+                        <input asp-for="ContactName" class="form-control" />
+                        <span asp-validation-for="ContactName" class="text-danger"></span>
+                    </div>
+                    <div>
+                        <label asp-for="CompanyName" class="form-label"></label>
+                        <input asp-for="CompanyName" class="form-control" />
+                        <span asp-validation-for="CompanyName" class="text-danger"></span>
+                    </div>
+                    <div>
+                        <label asp-for="Email" class="form-label"></label>
+                        <input asp-for="Email" class="form-control" />
+                        <span asp-validation-for="Email" class="text-danger"></span>
+                    </div>
+                    <div>
+                        <label asp-for="Phone" class="form-label"></label>
+                        <input asp-for="Phone" class="form-control" />
+                        <span asp-validation-for="Phone" class="text-danger"></span>
+                    </div>
+                </div>
+
+                <div>
+                    <label asp-for="InterestedProduct" class="form-label"></label>
+                    <input asp-for="InterestedProduct" class="form-control" placeholder="Ex.: Simplix Finance" />
+                    <span asp-validation-for="InterestedProduct" class="text-danger"></span>
+                </div>
+
+                <div>
+                    <label asp-for="Message" class="form-label"></label>
+                    <textarea asp-for="Message" class="form-control" rows="6" placeholder="Descreva o contexto da empresa, o problema e o que voce espera da solucao."></textarea>
+                    <span asp-validation-for="Message" class="text-danger"></span>
+                </div>
+
+                <button type="submit" class="btn btn-primary btn-lg">Enviar interesse comercial</button>
+            </form>
+        </article>
+    </div>
+</section>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+}

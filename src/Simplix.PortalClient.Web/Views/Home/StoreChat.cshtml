@@ -1,0 +1,116 @@
+@{
+    ViewData["Title"] = "Chat Comercial";
+    ViewData["ShellMode"] = "public";
+}
+
+<section class="section-block store-chat-page">
+    <div class="store-chat-shell">
+        <div class="section-heading store-chat-heading">
+            <div>
+                <span class="section-kicker">Atendimento inteligente</span>
+                <h2>Fale no chat com a inteligencia artificial</h2>
+            </div>
+        </div>
+
+        <article class="workspace-card store-chat-card">
+            <div id="storeChatMessages" class="store-chat-messages" aria-live="polite">
+                <div class="store-chat-message store-chat-message-ai">
+                    <p>Oi. Sou a IA comercial da Simplix. Me diga o produto ou contexto que voce quer avaliar.</p>
+                </div>
+            </div>
+
+            <form id="storeChatForm" class="store-chat-form">
+                <label class="form-label" for="storeChatInput">Sua mensagem</label>
+                <div class="store-chat-input-row">
+                    <input id="storeChatInput" class="form-control" placeholder="Ex.: Quero saber mais sobre o Simplix Finance." autocomplete="off" />
+                    <button id="storeChatSend" type="submit" class="btn btn-primary">Enviar</button>
+                </div>
+            </form>
+        </article>
+    </div>
+</section>
+
+@section Scripts {
+    <script>
+        (() => {
+            const form = document.getElementById("storeChatForm");
+            const input = document.getElementById("storeChatInput");
+            const send = document.getElementById("storeChatSend");
+            const messages = document.getElementById("storeChatMessages");
+
+            const appendMessage = (text, role) => {
+                const wrapper = document.createElement("div");
+                wrapper.className = `store-chat-message ${role === "user" ? "store-chat-message-user" : "store-chat-message-ai"}`;
+                const paragraph = document.createElement("p");
+                paragraph.textContent = text;
+                wrapper.appendChild(paragraph);
+                messages.appendChild(wrapper);
+                messages.scrollTop = messages.scrollHeight;
+                return paragraph;
+            };
+
+            const appendTyping = () => {
+                const wrapper = document.createElement("div");
+                wrapper.className = "store-chat-message store-chat-message-ai";
+                const paragraph = document.createElement("p");
+                paragraph.className = "store-chat-typing";
+                paragraph.textContent = "IA digitando...";
+                wrapper.appendChild(paragraph);
+                messages.appendChild(wrapper);
+                messages.scrollTop = messages.scrollHeight;
+                return wrapper;
+            };
+
+            const typeText = (target, text) => new Promise((resolve) => {
+                let index = 0;
+                const step = () => {
+                    index += 1;
+                    target.textContent = text.slice(0, index);
+                    messages.scrollTop = messages.scrollHeight;
+                    if (index < text.length) {
+                        window.setTimeout(step, 10);
+                    } else {
+                        resolve();
+                    }
+                };
+                step();
+            });
+
+            form.addEventListener("submit", async (event) => {
+                event.preventDefault();
+                const value = input.value.trim();
+                if (!value) {
+                    return;
+                }
+
+                appendMessage(value, "user");
+                input.value = "";
+                input.focus();
+                send.disabled = true;
+
+                const typingNode = appendTyping();
+
+                try {
+                    const response = await fetch("@Url.Action("StoreChatMessage", "Home")", {
+                        method: "POST",
+                        headers: {
+                            "Content-Type": "application/json"
+                        },
+                        body: JSON.stringify({ message: value })
+                    });
+
+                    const payload = await response.json();
+                    typingNode.remove();
+
+                    const aiMessage = appendMessage("", "ai");
+                    await typeText(aiMessage, payload.answer ?? "Recebi sua mensagem e posso te ajudar com a Store.");
+                } catch {
+                    typingNode.remove();
+                    appendMessage("Nao consegui responder agora. Tente novamente em alguns segundos.", "ai");
+                } finally {
+                    send.disabled = false;
+                }
+            });
+        })();
+    </script>
+}
