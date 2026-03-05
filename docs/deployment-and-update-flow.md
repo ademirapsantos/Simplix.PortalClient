@@ -27,13 +27,32 @@ O workflow em `.github/workflows/portal-client-cicd.yml` executa:
 
 ## Atualizacao do sistema
 
-O servico `update` foi preparado para consultar o GitHub e comparar:
+O servico `update` utiliza um manifesto de deploy (`compose/update-manifest.json`) atualizado a cada publicacao.
+Esse manifesto contem:
+
+- versao publicada
+- commit publicado
+- canal/branch da publicacao
+- data/hora do deploy
+
+Com base nele, o servico consulta o GitHub e compara:
 
 - branch alvo de publicacao
 - commit atual do ambiente implantado
 - ultimo commit do repositorio remoto
 
 Se houver diferenca, o endpoint retorna `hasUpdate = true`.
+
+## Inicializacao de banco
+
+A inicializacao automatica do banco no startup ficou controlada por configuracao:
+
+- `DatabaseInitialization:Enabled`
+- `DatabaseInitialization:ApplySchemaChanges`
+- `DatabaseInitialization:SeedData`
+- `DatabaseInitialization:SeedIdentity`
+
+Para `HMG` e `PRD`, o recomendado e manter desabilitado para evitar alteracao automatica de base durante deploy.
 
 ## Regra de negocio prevista
 
@@ -49,7 +68,7 @@ Os demais usuarios nao devem ver prompt de atualizacao.
 
 ## Ajustes necessarios antes de producao
 
-- trocar `your-org/kmkkm_PortalClient` pelo repositorio real
+- trocar `your-org/Simplix.PortalClient` pelo repositorio real
 - definir os environments `dev`, `hmg` e `prd` no GitHub
 - configurar secrets por ambiente
 - substituir o deploy shell basico pelo procedimento definitivo da VPS

@@ -1,0 +1,215 @@
+﻿@model Simplix.PortalClient.Application.Contracts.Portal.LandingPageViewModel
+@{
+    ViewData["Title"] = "Simplix Portal do Cliente";
+    ViewData["ShellMode"] = "public";
+}
+<div class="marketing-page">
+    <section class="marketing-hero" id="topo">
+        <div class="marketing-hero-copy">
+            <span class="marketing-kicker">Um ecossistema digital para gestão, vendas, estoque, financeiro, contabilidade e relacionamento com clientes, com possibilidade de automação de processos e integração com aplicações externas.</span>
+            <h1>Transforme a primeira visita em uma experiencia comercial memoravel.</h1>
+            <p class="marketing-hero-summary">@Model.CompanySummary</p>
+            <p class="marketing-hero-support">@Model.AboutCompany</p>
+            <div class="marketing-hero-actions">
+                <a class="btn btn-dark btn-lg marketing-primary-button" asp-action="Store">Conhecer solucoes</a>
+                <a class="btn btn-outline-dark btn-lg marketing-secondary-button" asp-controller="Account" asp-action="Login">Entrar no portal</a>
+            </div>
+            <div class="marketing-link-row">
+                <a href="#planos">Ver planos e precos</a>
+                <a href="#produtos">Explorar produtos</a>
+            </div>
+        </div>
+
+        <aside class="marketing-hero-visual" aria-label="Apresentacao visual da plataforma">
+            <div class="marketing-orbit marketing-orbit-back"></div>
+            <div class="marketing-orbit marketing-orbit-front"></div>
+            <div class="marketing-stage-card marketing-stage-card-main">
+                <span class="marketing-module-icon marketing-module-icon-vendas" aria-hidden="true">
+                    <svg viewBox="0 0 24 24" role="presentation" focusable="false">
+                        <path d="M4 18h16v2H4zM6 16V9h3v7zm5 0V6h3v10zm5 0v-4h3v4z"></path>
+                    </svg>
+                </span>
+                <span class="tag">Modulo</span>
+                <h2>Simplix Vendas</h2>
+                <p>Gestao comercial completa para controle de clientes, oportunidades, pedidos e relacionamento.</p>
+            </div>
+            <div class="marketing-floating-tile marketing-floating-tile-a">
+                <span class="marketing-module-icon marketing-module-icon-financeiro" aria-hidden="true">
+                    <svg viewBox="0 0 24 24" role="presentation" focusable="false">
+                        <path d="M12 2a7 7 0 0 0 0 14h1a3 3 0 0 1 0 6h-1a7 7 0 0 1-6.9-5.9h3A4 4 0 0 0 12 19h1a3 3 0 0 0 0-6h-1a7 7 0 0 1 0-14h1a7 7 0 0 1 6.9 5.9h-3A4 4 0 0 0 13 5z"></path>
+                    </svg>
+                </span>
+                <strong>Simplix Financeiro</strong>
+                <span>Controle financeiro com contas a pagar, contas a receber, fluxo de caixa e organização das movimentações.</span>
+            </div>
+            <div class="marketing-floating-tile marketing-floating-tile-b">
+                <span class="marketing-module-icon marketing-module-icon-contabilidade" aria-hidden="true">
+                    <svg viewBox="0 0 24 24" role="presentation" focusable="false">
+                        <path d="M3 4h18v3H3zm2 5h6v11H5zm8 0h6v2h-6zm0 4h6v2h-6zm0 4h6v2h-6z"></path>
+                    </svg>
+                </span>
+                <strong>Simplix Contabilidade</strong>
+                <span>Estrutura contábil integrada para controle patrimonial, balancetes e organização financeira do negócio.</span>
+            </div>
+            <div class="marketing-floating-tile marketing-floating-tile-c">
+                <span class="marketing-module-icon marketing-module-icon-estoque" aria-hidden="true">
+                    <svg viewBox="0 0 24 24" role="presentation" focusable="false">
+                        <path d="M3 7l9-4 9 4-9 4zm0 3l9 4 9-4v7l-9 4-9-4z"></path>
+                    </svg>
+                </span>
+                <strong>Simplix Estoque</strong>
+                <span>Gestão de produtos, controle de estoque, movimentações e organização de inventário.</span>
+            </div>
+            <div class="marketing-floating-tile marketing-floating-tile-d">
+                <span class="marketing-module-icon marketing-module-icon-service-desk" aria-hidden="true">
+                    <svg viewBox="0 0 24 24" role="presentation" focusable="false">
+                        <path d="M12 3a8 8 0 0 0-8 8v5a3 3 0 0 0 3 3h2v-6H6v-2a6 6 0 1 1 12 0v2h-3v6h2a3 3 0 0 0 3-3v-5a8 8 0 0 0-8-8"></path>
+                    </svg>
+                </span>
+                <strong>Simplix Service Desk</strong>
+                <span>Central de atendimento para suporte, registro de chamados e relacionamento com clientes.</span>
+            </div>
+            <div class="marketing-floating-tile marketing-floating-tile-e">
+                <span class="marketing-module-icon marketing-module-icon-integracoes" aria-hidden="true">
+                    <svg viewBox="0 0 24 24" role="presentation" focusable="false">
+                        <path d="M8 6a3 3 0 1 1 0 6H6v2h2a3 3 0 1 1 0 6H4v-2h4a1 1 0 0 0 0-2H6a3 3 0 1 1 0-6h2a1 1 0 0 0 0-2H4V6zm12 0v2h-4a1 1 0 0 0 0 2h2a3 3 0 1 1 0 6h-2a1 1 0 0 0 0 2h4v2h-4a3 3 0 1 1 0-6h2a1 1 0 0 0 0-2h-2a3 3 0 1 1 0-6z"></path>
+                    </svg>
+                </span>
+                <strong>Simplix Integracoes e Processos</strong>
+                <span>Integração com aplicações externas e possibilidade de adicionar novos processos à plataforma.</span>
+            </div>
+        </aside>
+    </section>
+
+    <section class="marketing-tab-strip">
+        <a href="#produtos" class="is-active">Aplicativos em destaque</a>
+        <a href="#beneficios">Beneficios</a>
+        <a href="#recursos">Recursos</a>
+        <a href="#planos">Planos</a>
+        <a href="#roadmap">Proximas etapas</a>
+        <a class="marketing-tab-cta" asp-action="Store">Inscreva-se</a>
+    </section>
+
+    <section class="marketing-section" id="beneficios">
+        <div class="marketing-section-heading">
+            <div>
+                <span class="section-kicker">Desenvolvemos soluções digitais que ajudam empresas, comércios, prestadores de serviço e profissionais autônomos a organizar suas operações, automatizar processos e crescer com mais controle e eficiência.</span>
+                <h2>Simplix Platform — tecnologia simples para negócios inteligentes.</h2>
+            </div>
+            <p>A Simplix Platform foi criada para transformar ideias em soluções reais. Nosso objetivo é desenvolver aplicações modernas que ajudem empresas a organizar processos, melhorar a gestão e ganhar produtividade através da tecnologia. Mais do que sistemas, entregamos plataformas pensadas para evoluir junto com o crescimento do cliente.</p>
+        </div>
+        <div class="marketing-benefit-grid">
+            <article class="marketing-benefit-card">
+                <span class="marketing-benefit-index"></span>
+                <p>Experiência simplificada. Nossa página inicial apresenta nossas soluções de forma clara e acessível, permitindo que clientes conheçam nossos produtos e descubram como a tecnologia pode ajudar seus negócios.</p>
+            </article>
+            <article class="marketing-benefit-card">
+                <span class="marketing-benefit-index"></span>
+                <p>Store de soluções. A Simplix oferece aplicações desenvolvidas para resolver necessidades reais do mercado, disponibilizadas através de licenciamento simples e escalável.</p>
+            </article>
+            <article class="marketing-benefit-card">
+                <span class="marketing-benefit-index"></span>
+                <p>Portal do cliente. Clientes possuem acesso a um portal exclusivo para gerenciar licenças, acessar atualizações, suporte e acompanhar a evolução das soluções contratadas.</p>
+            </article>
+            <article class="marketing-benefit-card">
+                <span class="marketing-benefit-index"></span>
+                <p>Gestão centralizada. A plataforma possui um painel administrativo que permite gerenciar clientes, licenças, usuários e suporte de forma organizada e segura.</p>
+            </article>
+        </div>
+    </section>
+
+    <section class="marketing-section" id="produtos">
+        <div class="marketing-section-heading">
+            <div>
+                <span class="section-kicker">Produtos</span>
+                <h2>Aplicativos apresentados como portfolio de verdade.</h2>
+            </div>
+            <a asp-action="Store">Catalogo completo</a>
+        </div>
+        <div class="marketing-product-grid">
+            @foreach (var application in Model.FeaturedApplications)
+            {
+                <article class="marketing-product-card">
+                    <span class="product-badge">@application.Category</span>
+                    <h3>@application.Name</h3>
+                    <p>@application.Description</p>
+                    <div class="marketing-product-footer">
+                        <span>@application.Positioning</span>
+                        <strong>@application.Status</strong>
+                    </div>
+                </article>
+            }
+            <article class="marketing-story-card" id="recursos">
+                <span class="section-kicker">Apresentacao da empresa</span>
+                <h3>@Model.ProductName</h3>
+                <p>@Model.AboutCompany</p>
+                <a asp-action="Store">Ver a experiencia comercial completa</a>
+            </article>
+        </div>
+    </section>
+
+    <section class="marketing-section" id="planos">
+        <div class="marketing-section-heading">
+            <div>
+                <span class="section-kicker">Planos e precos</span>
+                <h2>Formatos comerciais prontos para diferentes momentos do cliente.</h2>
+            </div>
+            <p>Do primeiro passo ate operacoes mais maduras, a estrutura comercial precisa ser clara e convidativa.</p>
+        </div>
+        <div class="marketing-pricing-grid">
+            @foreach (var plan in Model.CommercialPlans)
+            {
+                <article class="marketing-pricing-card">
+                    <span class="tag">Plano</span>
+                    <h3>@plan.Name</h3>
+                    <p>@plan.Description</p>
+                    <strong>@plan.TargetAudience</strong>
+                </article>
+            }
+        </div>
+    </section>
+
+    <section class="marketing-section" id="suporte">
+        <div class="marketing-section-heading">
+            <div>
+                <span class="section-kicker">Suporte e continuidade</span>
+                <h2>Depois da venda, a experiencia continua organizada.</h2>
+            </div>
+            <p>O cliente acessa um workspace para acompanhar licencas, renovacoes, financeiro, acessos e atendimento sem perder contexto.</p>
+        </div>
+        <div class="marketing-dual-grid">
+            <article class="marketing-info-card marketing-info-card-soft">
+                <h3>Jornada comercial e operacional em uma so plataforma</h3>
+                <p>Pagina inicial, store, portal do cliente, chamados e gestao comercial convivem com a mesma base de produto.</p>
+            </article>
+            <article class="marketing-info-card">
+                <h3>Entrada clara para cada perfil</h3>
+                <ul>
+                    <li>Visitante conhece a empresa e o portfolio.</li>
+                    <li>Lead comercial entra em conversa com vendas.</li>
+                    <li>Cliente acessa operacao, suporte e upgrades.</li>
+                </ul>
+            </article>
+        </div>
+    </section>
+
+    <section class="marketing-section" id="roadmap">
+        <div class="marketing-section-heading">
+            <div>
+                <span class="section-kicker">Proximas etapas</span>
+                <h2>Evolucao pensada em fases para sustentar a plataforma.</h2>
+            </div>
+            <a asp-action="Store">Ir para a Store</a>
+        </div>
+        <div class="marketing-roadmap-grid">
+            @foreach (var item in Model.Roadmap)
+            {
+                <article class="marketing-roadmap-card">
+                    <span class="roadmap-step">@item.StepNumber.ToString("00")</span>
+                    <h3>@item.Title</h3>
+                    <p>@item.Description</p>
+                </article>
+            }
+        </div>
+    </section>
+</div>

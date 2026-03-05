@@ -1,0 +1,115 @@
+name: ${COMPOSE_PROJECT_NAME}
+
+services:
+  app:
+    container_name: ${APP_NAME}
+    image: ${REGISTRY_IMAGE:-ghcr.io/ademirapsantos/simplix.portalclient/portal-client-app}:${IMAGE_TAG:-dev}
+    build:
+      context: ..
+      dockerfile: src/Simplix.PortalClient.Web/Dockerfile
+    environment:
+      ASPNETCORE_ENVIRONMENT: Production
+      ConnectionStrings__Postgres: Host=postgres;Port=5432;Database=${POSTGRES_DB};Username=${POSTGRES_USER};Password=${POSTGRES_PASSWORD}
+      UpdateServer__BaseUrl: http://update:8081
+      UpdateServer__Token: ${UPDATE_TOKEN}
+      UpdateServer__CurrentChannel: ${UPDATE_CHANNEL}
+      UpdateServer__EnableAutoUpdatePrompt: ${UPDATE_ENABLE_AUTO_UPDATE_PROMPT}
+      SeedUsers__Admin__Password: ${SEED_ADMIN_PASSWORD}
+      SeedUsers__Sales__Password: ${SEED_SALES_PASSWORD}
+      SeedUsers__Support__Password: ${SEED_SUPPORT_PASSWORD}
+      SeedUsers__Client__Password: ${SEED_CLIENT_PASSWORD}
+      PasswordReset__Enabled: ${PASSWORD_RESET_ENABLED:-true}
+      PasswordReset__PublicOrigin: ${PORTAL_PUBLIC_ORIGIN}
+      Authentication__CookieSecurePolicy: ${AUTH_COOKIE_SECURE_POLICY:-Always}
+      DatabaseInitialization__Enabled: ${DB_INIT_ENABLED:-false}
+      DatabaseInitialization__ApplySchemaChanges: ${DB_INIT_APPLY_SCHEMA_CHANGES:-false}
+      DatabaseInitialization__SeedData: ${DB_INIT_SEED_DATA:-false}
+      DatabaseInitialization__SeedIdentity: ${DB_INIT_SEED_IDENTITY:-false}
+    expose:
+      - "8080"
+    depends_on:
+      postgres:
+        condition: service_healthy
+      update:
+        condition: service_healthy
+    healthcheck:
+      test: ["CMD-SHELL", "wget -qO- http://127.0.0.1:8080/health || exit 1"]
+      interval: 15s
+      timeout: 5s
+      retries: 5
+      start_period: 20s
+    restart: unless-stopped
+    networks:
+      - simplix-backbone
+      - proxy
+
+  postgres:
+    container_name: ${POSTGRES_NAME}
+    image: postgres:16-alpine
+    environment:
+      POSTGRES_DB: ${POSTGRES_DB}
+      POSTGRES_USER: ${POSTGRES_USER}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+    volumes:
+      - postgres-data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U $$POSTGRES_USER -d $$POSTGRES_DB"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+      start_period: 10s
+    restart: unless-stopped
+    networks:
+      - simplix-backbone
+
+  update:
+    container_name: ${UPDATE_NAME}
+    build:
+      context: ..
+      dockerfile: infra/docker/update-service/Dockerfile
+    environment:
+      UPDATE_CURRENT_VERSION: ${UPDATE_CURRENT_VERSION}
+      UPDATE_TARGET_VERSION: ${UPDATE_TARGET_VERSION}
+      UPDATE_CHANNEL: ${UPDATE_CHANNEL}
+      UPDATE_REQUIRES_ADMIN_APPROVAL: ${UPDATE_REQUIRES_ADMIN_APPROVAL}
+      UPDATE_CURRENT_COMMIT: ${UPDATE_CURRENT_COMMIT}
+      UPDATE_GIT_PROVIDER: ${UPDATE_GIT_PROVIDER}
+      UPDATE_GIT_REPOSITORY: ${UPDATE_GIT_REPOSITORY}
+      UPDATE_GIT_BRANCH: ${UPDATE_GIT_BRANCH}
+      UPDATE_GIT_TOKEN: ${UPDATE_GIT_TOKEN}
+      UPDATE_TOKEN: ${UPDATE_TOKEN}
+      UPDATE_MANIFEST_PATH: /app/manifest/update-manifest.json
+      UPDATE_MANIFEST_BASE_URL: ${UPDATE_MANIFEST_BASE_URL}
+      UPDATE_ENVIRONMENT: ${UPDATE_ENVIRONMENT}
+      UPDATE_COMPOSE_FILE: /workspace/docker-compose.yml
+      UPDATE_COMPOSE_OVERRIDE_FILE: /workspace/docker-compose.${UPDATE_ENVIRONMENT}.yml
+      UPDATE_ENV_FILE: /workspace/.env.${UPDATE_ENVIRONMENT}
+      UPDATE_PROJECT_DIR: /workspace
+      UPDATE_APP_SERVICE_NAME: app
+      UPDATE_APP_HEALTH_URL: http://app:8080/health
+    volumes:
+      - ./update-manifest.json:/app/manifest/update-manifest.json
+      - ./data/update:/app/data
+      - ./:/workspace
+      - /var/run/docker.sock:/var/run/docker.sock
+    expose:
+      - "8081"
+    healthcheck:
+      test: ["CMD", "python", "-c", "import urllib.request; urllib.request.urlopen('http://127.0.0.1:8081/health').read()"]
+      interval: 15s
+      timeout: 5s
+      retries: 5
+      start_period: 5s
+    restart: unless-stopped
+    networks:
+      - simplix-backbone
+
+networks:
+  simplix-backbone:
+    driver: bridge
+  proxy:
+    external: true
+
+volumes:
+  postgres-data:
+    name: ${POSTGRES_VOLUME_NAME}

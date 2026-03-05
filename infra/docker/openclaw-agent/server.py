@@ -3,7 +3,7 @@ import os
 from http.server import BaseHTTPRequestHandler, HTTPServer
 
 
-AGENT_NAME = os.getenv("OPENCLAW_AGENT_NAME", "KMKKM OpenClaw Agent")
+AGENT_NAME = os.getenv("OPENCLAW_AGENT_NAME", "Simplix OpenClaw Agent")
 DEFAULT_MODEL = os.getenv("OPENCLAW_DEFAULT_MODEL", "openclaw-local")
 DEFAULT_QUEUE = os.getenv("OPENCLAW_DEFAULT_QUEUE", "suporte")
 

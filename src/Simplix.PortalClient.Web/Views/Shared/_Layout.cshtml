@@ -1,0 +1,118 @@
+﻿@{
+    bool useWideShell = ViewData["UseWideShell"] as bool? ?? false;
+    string shellMode = (ViewData["ShellMode"] as string ?? "app").ToLowerInvariant();
+    bool isPublicShell = shellMode == "public";
+    string accountName = User.Identity?.Name ?? "Conta";
+    string[] accountParts = accountName
+        .Split(new[] { ' ', '.', '-', '_', '@' }, StringSplitOptions.RemoveEmptyEntries);
+    string accountInitials = string.Concat(accountParts.Take(2).Select(x => char.ToUpperInvariant(x[0])));
+
+    if (string.IsNullOrWhiteSpace(accountInitials))
+    {
+        accountInitials = "KM";
+    }
+}
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>@ViewData["Title"] - Simplix Platform</title>
+    <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
+    <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
+</head>
+<body>
+    @if (isPublicShell)
+    {
+        <header class="topbar topbar-public">
+            <div class="container-fluid shell-width public-shell-width">
+                <div class="public-brand-cluster">
+                    <a class="brand-mark brand-mark-public" asp-area="" asp-controller="Home" asp-action="Index">
+                        <img class="brand-logo-image brand-logo-image-public" src="~/images/Logo_SimplixPlataform_v01_transparent.png" asp-append-version="true" alt="Simplix Platform" />
+                    </a>
+                    <span class="public-brand-divider" aria-hidden="true"></span>
+                    <strong class="public-brand-suite">Portal Client</strong>
+                </div>
+
+                <nav class="public-nav" aria-label="Navegacao principal">
+                    <a href="#produtos">Produtos</a>
+                    <a href="#planos">Planos e precos</a>
+                    <a href="#recursos">Recursos</a>
+                    <a asp-action="Store" asp-controller="Home">Store</a>
+                    <a href="#suporte">Suporte</a>
+                </nav>
+
+                <div class="public-header-actions">
+                    <a class="public-header-link" asp-controller="Account" asp-action="Login">Entrar</a>
+                    <a class="btn btn-dark public-header-button" asp-action="Store" asp-controller="Home">Conhecer</a>
+                </div>
+            </div>
+        </header>
+    }
+    else
+    {
+        <header class="topbar">
+            <div class="container-fluid shell-width">
+                <a class="brand-mark brand-mark-app" asp-area="" asp-controller="Home" asp-action="Index">
+                    <img class="brand-logo-image brand-logo-image-app" src="~/images/Logo_SimplixPlataform_v01_transparent.png" asp-append-version="true" alt="Simplix Platform" />
+                </a>
+                <div class="topbar-actions">
+                    @if (User.Identity?.IsAuthenticated == true)
+                    {
+                        <div class="dropdown">
+                            <button class="account-menu-toggle dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
+                                <span class="account-menu-avatar">@accountInitials</span>
+                            </button>
+                            <ul class="dropdown-menu dropdown-menu-end account-menu-dropdown">
+                                <li class="account-menu-meta">
+                                    <strong>@accountName</strong>
+                                    <span>Conta do cliente</span>
+                                </li>
+                                <li><hr class="dropdown-divider" /></li>
+                                <li>
+                                    <a class="dropdown-item" asp-controller="Account" asp-action="ChangePassword">Perfil</a>
+                                </li>
+                                <li>
+                                    <form method="post" asp-area="" asp-controller="Account" asp-action="Logout" class="logout-form">
+                                        @Html.AntiForgeryToken()
+                                        <button type="submit" class="dropdown-item">Sair</button>
+                                    </form>
+                                </li>
+                            </ul>
+                        </div>
+                    }
+                    else
+                    {
+                        <a class="topbar-login" asp-controller="Account" asp-action="Login">Entrar</a>
+                    }
+                </div>
+            </div>
+        </header>
+    }
+    <main class="container-fluid shell-width @(useWideShell ? "main-shell-wide" : string.Empty) @(isPublicShell ? "public-main-shell" : string.Empty)">
+        @RenderBody()
+    </main>
+    @if (isPublicShell)
+    {
+        <footer class="footer-shell footer-shell-public">
+            <div class="container-fluid shell-width public-shell-width">
+                <strong>Simplix Platform</strong>
+                <span>Ecossistema comercial, operacional e de atendimento para software, licencas e relacionamento continuo com o cliente.</span>
+            </div>
+        </footer>
+    }
+    else
+    {
+        <footer class="footer-shell">
+            <div class="container-fluid shell-width">
+                <strong>Simplix Portal do Cliente</strong>
+                <span>Base inicial do ecossistema da startup em ASP.NET Core + C# + PostgreSQL.</span>
+            </div>
+        </footer>
+    }
+    <script src="~/lib/jquery/dist/jquery.min.js"></script>
+    <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="~/js/site.js" asp-append-version="true"></script>
+    @await RenderSectionAsync("Scripts", required: false)
+</body>
+</html>
