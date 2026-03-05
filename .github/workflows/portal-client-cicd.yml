@@ -125,11 +125,16 @@ jobs:
       - uses: actions/checkout@v4
 
       - name: Prepare SSH key
-        if: ${{ secrets.DEPLOY_SSH_KEY != '' }}
         shell: bash
+        env:
+          DEPLOY_SSH_KEY_INPUT: ${{ secrets.DEPLOY_SSH_KEY }}
         run: |
+          if [ -z "$DEPLOY_SSH_KEY_INPUT" ]; then
+            echo "DEPLOY_SSH_KEY not configured. SSH key preparation skipped."
+            exit 0
+          fi
           mkdir -p ~/.ssh
-          echo "${{ secrets.DEPLOY_SSH_KEY }}" > ~/.ssh/id_ed25519
+          echo "$DEPLOY_SSH_KEY_INPUT" > ~/.ssh/id_ed25519
           chmod 600 ~/.ssh/id_ed25519
 
       - name: Validate deploy config
@@ -180,11 +185,16 @@ jobs:
       - uses: actions/checkout@v4
 
       - name: Prepare SSH key
-        if: ${{ secrets.DEPLOY_SSH_KEY != '' }}
         shell: bash
+        env:
+          DEPLOY_SSH_KEY_INPUT: ${{ secrets.DEPLOY_SSH_KEY }}
         run: |
+          if [ -z "$DEPLOY_SSH_KEY_INPUT" ]; then
+            echo "DEPLOY_SSH_KEY not configured. SSH key preparation skipped."
+            exit 0
+          fi
           mkdir -p ~/.ssh
-          echo "${{ secrets.DEPLOY_SSH_KEY }}" > ~/.ssh/id_ed25519
+          echo "$DEPLOY_SSH_KEY_INPUT" > ~/.ssh/id_ed25519
           chmod 600 ~/.ssh/id_ed25519
 
       - name: Validate deploy config
