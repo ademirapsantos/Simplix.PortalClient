@@ -1,8 +1,8 @@
 {
-  "version": "1.0.3-dev.aa3166d",
-  "latest_version": "1.0.3-dev.aa3166d",
-  "tag": "1.0.3-dev.aa3166d",
-  "commit": "aa3166d0baaaad213b0a9ad24fe4067fd544911e",
-  "date": "2026-03-05T17:22:39Z",
+  "version": "1.0.6-dev.1fd30e1",
+  "latest_version": "1.0.6-dev.1fd30e1",
+  "tag": "1.0.6-dev.1fd30e1",
+  "commit": "1fd30e11f9cf00a78eff8b764cbb0e0c16a399ce",
+  "date": "2026-03-05T18:12:44Z",
   "environment": "dev"
 }
