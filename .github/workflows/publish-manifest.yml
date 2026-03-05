@@ -1,0 +1,71 @@
+name: publish-manifest
+
+on:
+  push:
+    branches:
+      - dev
+      - release
+      - main
+
+permissions:
+  contents: write
+
+jobs:
+  publish:
+    runs-on:
+      - self-hosted
+      - Linux
+      - X64
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Resolve Environment
+        id: env
+        shell: bash
+        run: |
+          BRANCH_NAME="${GITHUB_REF_NAME}"
+          case "$BRANCH_NAME" in
+            main)
+              echo "deploy_env=prd" >> "$GITHUB_OUTPUT"
+              ;;
+            release)
+              echo "deploy_env=hmg" >> "$GITHUB_OUTPUT"
+              ;;
+            *)
+              echo "deploy_env=dev" >> "$GITHUB_OUTPUT"
+              ;;
+          esac
+
+      - name: Compute Version
+        id: version
+        shell: pwsh
+        run: |
+          $output = ./scripts/ci/compute-version.ps1 -BranchName "${{ github.ref_name }}" -Sha "${{ github.sha }}" -RunNumber ${{ github.run_number }}
+          foreach ($line in $output) {
+            $line >> $env:GITHUB_OUTPUT
+          }
+
+      - name: Build Manifest
+        shell: bash
+        run: |
+          mkdir -p public
+          cat <<EOF > "public/${{ steps.env.outputs.deploy_env }}.json"
+          {
+            "version": "${{ steps.version.outputs.version }}",
+            "latest_version": "${{ steps.version.outputs.version }}",
+            "tag": "${{ steps.version.outputs.image_tag }}",
+            "commit": "${{ github.sha }}",
+            "date": "$(date -u +'%Y-%m-%dT%H:%M:%SZ')",
+            "environment": "${{ steps.env.outputs.deploy_env }}"
+          }
+          EOF
+
+      - name: Publish gh-pages
+        uses: peaceiris/actions-gh-pages@v3
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          publish_dir: ./public
+          keep_files: true
+          user_name: github-actions[bot]
+          user_email: github-actions[bot]@users.noreply.github.com

@@ -37,6 +37,26 @@
                 <li>Aprovacao do Admin: @(Model.SystemUpdateStatus.RequiresAdminApproval ? "Obrigatoria" : "Nao obrigatoria")</li>
                 <li>Servico de update: @(Model.SystemUpdateStatus.IsAvailable ? "Disponivel" : "Indisponivel")</li>
             </ul>
+            @if (TempData["UpdateSuccess"] is string updateSuccess)
+            {
+                <p class="text-success">@updateSuccess</p>
+            }
+            @if (TempData["UpdateError"] is string updateError)
+            {
+                <p class="text-danger">@updateError</p>
+            }
+            <form asp-action="StartUpdate" method="post">
+                @Html.AntiForgeryToken()
+                <button type="submit" class="btn btn-primary" @(Model.SystemUpdateStatus.HasPendingUpdate ? null : "disabled")>
+                    Iniciar atualizacao
+                </button>
+            </form>
+            <ul id="updateRuntimeStatus" data-status-url="@Url.Action("UpdateRuntimeStatus", "Dashboard", new { area = "Admin" })">
+                <li>Status de execucao: <span data-field="CurrentStage">desconhecido</span></li>
+                <li>Em andamento: <span data-field="InProgress">false</span></li>
+                <li>Versao alvo em execucao: <span data-field="TargetVersion">-</span></li>
+                <li>Ultimo erro: <span data-field="LastError">-</span></li>
+            </ul>
         </article>
     </section>
 }
@@ -57,6 +77,39 @@
         }
     </div>
 </section>
+
+@if (canManageSystemUpdate)
+{
+    <script>
+    (function () {
+      const host = document.getElementById("updateRuntimeStatus");
+      if (!host) return;
+
+      const statusUrl = host.dataset.statusUrl;
+      const field = (name, value) => {
+        const el = host.querySelector(`[data-field="${name}"]`);
+        if (el) el.textContent = value ?? "-";
+      };
+
+      const refresh = async () => {
+        try {
+          const response = await fetch(statusUrl, { cache: "no-store" });
+          if (!response.ok) return;
+          const data = await response.json();
+          field("CurrentStage", data.currentStage);
+          field("InProgress", String(data.inProgress));
+          field("TargetVersion", data.targetVersion);
+          field("LastError", data.lastError || "-");
+        } catch (_) {
+          field("CurrentStage", "indisponivel");
+        }
+      };
+
+      refresh();
+      window.setInterval(refresh, 5000);
+    })();
+    </script>
+}
 
 <section class="section-block">
     <div class="section-heading">
@@ -96,4 +149,3 @@
         </ul>
     </article>
 </section>
-

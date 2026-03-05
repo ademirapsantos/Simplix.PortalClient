@@ -117,6 +117,20 @@ a {
   font-weight: 700;
 }
 
+.brand-logo-image {
+  display: block;
+  width: auto;
+  object-fit: contain;
+}
+
+.brand-logo-image-public {
+  max-height: 3rem;
+}
+
+.brand-logo-image-app {
+  max-height: 2.8rem;
+}
+
 .public-brand-cluster {
   display: flex;
   align-items: center;
@@ -360,7 +374,7 @@ main.shell-width {
 
 main.shell-width.public-main-shell {
   max-width: none;
-  padding: 0 0 6rem;
+  padding: 0 clamp(0.8rem, 2vw, 1.4rem) 6rem;
 }
 
 main.shell-width.main-shell-wide {
@@ -477,7 +491,7 @@ main.shell-width.main-shell-wide {
 
 .marketing-hero-visual {
   position: relative;
-  min-height: 560px;
+  min-height: 700px;
 }
 
 .marketing-orbit {
@@ -511,19 +525,34 @@ main.shell-width.main-shell-wide {
 
 .marketing-stage-card,
 .marketing-floating-tile {
+  --card-base-transform: translate(0, 0);
   position: absolute;
   border: 1px solid rgba(255, 255, 255, 0.72);
-  background: rgba(255, 255, 255, 0.8);
+  background: rgba(255, 255, 255, 0.66);
   box-shadow: 0 18px 40px rgba(90, 110, 160, 0.12);
   backdrop-filter: blur(12px);
+  overflow: visible;
+  transform: var(--card-base-transform);
+  transition:
+    transform 0.25s ease,
+    box-shadow 0.25s ease;
+}
+
+.marketing-stage-card:hover,
+.marketing-floating-tile:hover {
+  transform: var(--card-base-transform) translateY(-8px) scale(1.03);
+  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.12);
+  z-index: 8;
 }
 
 .marketing-stage-card-main {
-  top: 12%;
-  left: 6%;
-  max-width: 19rem;
+  top: 10%;
+  left: 12%;
+  max-width: 18.8rem;
   padding: 1.4rem;
   border-radius: 24px;
+  z-index: 4;
+  --card-base-transform: translate(-12px, -6px);
 }
 
 .marketing-stage-card-main h2 {
@@ -545,28 +574,104 @@ main.shell-width.main-shell-wide {
 
 .marketing-floating-tile {
   display: grid;
-  gap: 0.25rem;
+  gap: 0.35rem;
+  width: min(250px, 43%);
   padding: 1rem 1.1rem;
   border-radius: 20px;
+  z-index: 4;
 }
 
 .marketing-floating-tile strong {
   color: #111827;
+  font-size: 1.02rem;
 }
 
 .marketing-floating-tile-a {
-  top: 18%;
+  top: 8%;
   right: 8%;
+  --card-base-transform: translate(40px, -20px);
 }
 
 .marketing-floating-tile-b {
-  right: 1%;
-  bottom: 16%;
+  top: 36%;
+  right: 2%;
+  --card-base-transform: translate(20px, 40px);
 }
 
 .marketing-floating-tile-c {
-  left: 18%;
-  bottom: 6%;
+  top: 76%;
+  left: 30%;
+  --card-base-transform: translate(0, 60px);
+}
+
+.marketing-floating-tile-d {
+  top: 58%;
+  right: 7%;
+  --card-base-transform: translate(50px, 80px);
+}
+
+.marketing-floating-tile-e {
+  top: 56%;
+  left: 3%;
+  --card-base-transform: translate(-40px, 30px);
+}
+
+.marketing-module-icon {
+  position: absolute;
+  top: -14px;
+  left: 12px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 32px;
+  height: 32px;
+  border-radius: 10px;
+  border: 1px solid rgba(255, 255, 255, 0.92);
+  background: #eff6ff;
+  box-shadow: 0 8px 20px rgba(17, 24, 39, 0.16);
+  transition:
+    transform 0.25s ease,
+    box-shadow 0.25s ease;
+}
+
+.marketing-stage-card:hover .marketing-module-icon,
+.marketing-floating-tile:hover .marketing-module-icon {
+  transform: scale(1.1);
+  box-shadow: 0 10px 24px rgba(37, 99, 235, 0.28);
+}
+
+.marketing-module-icon svg {
+  width: 17px;
+  height: 17px;
+  fill: #0f172a;
+}
+
+.marketing-floating-tile span {
+  line-height: 1.45;
+}
+
+.marketing-module-icon-vendas {
+  background: linear-gradient(145deg, #dbeafe, #f0f9ff);
+}
+
+.marketing-module-icon-financeiro {
+  background: linear-gradient(145deg, #dcfce7, #f0fdf4);
+}
+
+.marketing-module-icon-contabilidade {
+  background: linear-gradient(145deg, #ede9fe, #f5f3ff);
+}
+
+.marketing-module-icon-estoque {
+  background: linear-gradient(145deg, #fef3c7, #fffbeb);
+}
+
+.marketing-module-icon-service-desk {
+  background: linear-gradient(145deg, #fee2e2, #fff1f2);
+}
+
+.marketing-module-icon-integracoes {
+  background: linear-gradient(145deg, #cffafe, #ecfeff);
 }
 
 .marketing-tab-strip {
@@ -2057,23 +2162,48 @@ main.shell-width.main-shell-wide {
   }
 
   .marketing-hero-visual {
-    min-height: 420px;
+    min-height: 560px;
+  }
+
+  .marketing-floating-tile {
+    width: min(220px, 48%);
   }
 
   .marketing-stage-card-main {
     left: 0;
+    --card-base-transform: translate(0, -4px);
   }
 
   .marketing-floating-tile-a {
-    right: 10%;
+    top: 8%;
+    right: 4%;
+    --card-base-transform: translate(14px, -8px);
   }
 
   .marketing-floating-tile-b {
-    right: 0;
+    top: 38%;
+    right: 1%;
+    --card-base-transform: translate(10px, 18px);
   }
 
   .marketing-floating-tile-c {
-    left: 6%;
+    top: 74%;
+    left: 28%;
+    --card-base-transform: translate(0, 26px);
+  }
+
+  .marketing-floating-tile-d {
+    top: 60%;
+    right: 4%;
+    bottom: auto;
+    --card-base-transform: translate(18px, 28px);
+  }
+
+  .marketing-floating-tile-e {
+    top: 54%;
+    left: 1%;
+    bottom: auto;
+    --card-base-transform: translate(-12px, 14px);
   }
 
   .marketing-tab-strip {
@@ -2144,6 +2274,130 @@ main.shell-width.main-shell-wide {
 .store-lead-grid {
   display: grid;
   gap: 1rem;
+}
+
+.store-modal-content {
+  border: 1px solid rgba(23, 62, 169, 0.12);
+  border-radius: 20px;
+}
+
+.store-modal-body {
+  display: grid;
+  gap: 0.9rem;
+}
+
+.store-modal-body p {
+  margin: 0 0 0.35rem;
+  color: var(--muted);
+}
+
+.store-interest-page,
+.store-chat-page {
+  margin-top: 1.25rem;
+}
+
+.store-interest-shell,
+.store-chat-shell {
+  max-width: 1040px;
+  margin: 0 auto;
+}
+
+.store-interest-heading,
+.store-chat-heading {
+  margin-bottom: 1rem;
+}
+
+.store-interest-card {
+  border-radius: 24px;
+}
+
+.store-chat-card {
+  display: grid;
+  grid-template-rows: minmax(0, 1fr) auto;
+  gap: 1rem;
+  border-radius: 24px;
+  padding: 1.25rem;
+  width: 980px;
+  height: 720px;
+  max-width: 100%;
+}
+
+.store-chat-messages {
+  display: grid;
+  gap: 0.7rem;
+  min-height: 0;
+  height: 100%;
+  max-height: none;
+  overflow-y: auto;
+  padding: 0.5rem 0.4rem 0.3rem;
+}
+
+.store-chat-message {
+  display: flex;
+}
+
+.store-chat-message p {
+  margin: 0;
+  max-width: min(78%, 720px);
+  padding: 0.7rem 0.9rem;
+  border-radius: 14px;
+}
+
+.store-chat-message-ai p {
+  background: rgba(233, 241, 255, 0.95);
+  border: 1px solid rgba(37, 99, 235, 0.16);
+  color: #123;
+}
+
+.store-chat-message-user {
+  justify-content: flex-end;
+}
+
+.store-chat-message-user p {
+  background: linear-gradient(135deg, var(--brand) 0%, var(--accent) 100%);
+  color: #fff;
+}
+
+.store-chat-typing {
+  opacity: 0.75;
+}
+
+.store-chat-form {
+  display: grid;
+  gap: 0.6rem;
+}
+
+.store-chat-input-row {
+  display: grid;
+  grid-template-columns: 1fr auto;
+  gap: 0.75rem;
+  align-items: center;
+}
+
+@media (max-width: 1199px) {
+  .store-chat-card {
+    width: 900px;
+    height: 680px;
+  }
+}
+
+@media (max-width: 991px) {
+  .store-chat-card {
+    width: 100%;
+    height: 620px;
+    padding: 1rem;
+  }
+}
+
+@media (max-width: 767px) {
+  .store-chat-card {
+    height: calc(100vh - 15.5rem);
+    min-height: 500px;
+  }
+
+  .store-chat-input-row {
+    grid-template-columns: 1fr;
+  }
 }
 
 .store-lead-layout {
@@ -2411,8 +2665,12 @@ main.shell-width.main-shell-wide {
     align-items: flex-start;
   }
 
-  .brand-app-name {
-    font-size: 1rem;
+  .brand-logo-image-public {
+    max-height: 2.4rem;
+  }
+
+  .brand-logo-image-app {
+    max-height: 2.2rem;
   }
 
   .hero-copy-main,

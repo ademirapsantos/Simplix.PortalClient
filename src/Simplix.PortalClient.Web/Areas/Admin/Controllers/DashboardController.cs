@@ -1,5 +1,5 @@
-﻿using Simplix.PortalClient.Domain.Constants;
 using Simplix.PortalClient.Application.Interfaces;
+using Simplix.PortalClient.Domain.Constants;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
@@ -23,5 +23,22 @@ public sealed class DashboardController : Controller
         var viewModel = await _adminWorkspaceService.GetWorkspaceAsync(cancellationToken);
         return View(viewModel);
     }
-}
 
+    [HttpPost]
+    [Authorize(Roles = SystemRoles.Admin)]
+    [ValidateAntiForgeryToken]
+    public async Task<IActionResult> StartUpdate(CancellationToken cancellationToken)
+    {
+        var result = await _adminWorkspaceService.StartSystemUpdateAsync(cancellationToken);
+        TempData[result.Success ? "UpdateSuccess" : "UpdateError"] = result.Message;
+        return RedirectToAction(nameof(Index));
+    }
+
+    [HttpGet]
+    [Authorize(Roles = SystemRoles.Admin)]
+    public async Task<IActionResult> UpdateRuntimeStatus(CancellationToken cancellationToken)
+    {
+        var status = await _adminWorkspaceService.GetSystemUpdateRuntimeStatusAsync(cancellationToken);
+        return Json(status);
+    }
+}

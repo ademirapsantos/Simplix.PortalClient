@@ -8,6 +8,8 @@ DEPLOY_ENV="${DEPLOY_ENV:-dev}"
 REGISTRY="${REGISTRY:-ghcr.io}"
 REGISTRY_IMAGE="${REGISTRY_IMAGE:-}"
 IMAGE_TAG="${IMAGE_TAG:-}"
+SOURCE_REVISION="${SOURCE_REVISION:-}"
+GIT_BRANCH="${GIT_BRANCH:-}"
 REGISTRY_USERNAME="${REGISTRY_USERNAME:-}"
 REGISTRY_PASSWORD="${REGISTRY_PASSWORD:-}"
 COMPOSE_FILE_BASE="compose/docker-compose.yml"
@@ -47,7 +49,23 @@ tar czf - compose infra/docker/update-service | ssh -o StrictHostKeyChecking=no 
 "
 
 ssh -o StrictHostKeyChecking=no "$REMOTE_USER@$REMOTE_HOST" "
+  mkdir -p '$REMOTE_PATH/compose' &&
+  cat > '$REMOTE_PATH/compose/update-manifest.json' <<'EOF'
+{
+  \"service\": \"portal-client\",
+  \"channel\": \"$DEPLOY_ENV\",
+  \"currentVersion\": \"$IMAGE_TAG\",
+  \"targetVersion\": \"$IMAGE_TAG\",
+  \"currentCommit\": \"$SOURCE_REVISION\",
+  \"buildBranch\": \"$GIT_BRANCH\",
+  \"deployedAtUtc\": \"$(date -u +%Y-%m-%dT%H:%M:%SZ)\"
+}
+EOF
+
   cd '$REMOTE_PATH' &&
+  export UPDATE_CURRENT_VERSION='$IMAGE_TAG' &&
+  export UPDATE_TARGET_VERSION='$IMAGE_TAG' &&
+  export UPDATE_CURRENT_COMMIT='$SOURCE_REVISION' &&
   export DEPLOY_ENV='$DEPLOY_ENV' &&
   export REGISTRY_IMAGE='$REGISTRY_IMAGE' &&
   export IMAGE_TAG='$IMAGE_TAG' &&
@@ -55,5 +73,6 @@ ssh -o StrictHostKeyChecking=no "$REMOTE_USER@$REMOTE_HOST" "
     printf '%s\n' '$REGISTRY_PASSWORD' | docker login '$REGISTRY' -u '$REGISTRY_USERNAME' --password-stdin &&
   fi &&
   docker compose --env-file '$ENV_FILE' -f '$COMPOSE_FILE_BASE' -f '$COMPOSE_FILE_OVERRIDE' pull app &&
-  docker compose --env-file '$ENV_FILE' -f '$COMPOSE_FILE_BASE' -f '$COMPOSE_FILE_OVERRIDE' up -d --no-build
+  docker compose --env-file '$ENV_FILE' -f '$COMPOSE_FILE_BASE' -f '$COMPOSE_FILE_OVERRIDE' up -d --no-build app postgres &&
+  docker compose --env-file '$ENV_FILE' -f '$COMPOSE_FILE_BASE' -f '$COMPOSE_FILE_OVERRIDE' up -d --build update
 "

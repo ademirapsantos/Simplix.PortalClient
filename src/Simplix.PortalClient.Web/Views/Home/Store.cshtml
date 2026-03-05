@@ -1,21 +1,22 @@
-﻿@model Simplix.PortalClient.Web.Models.Portal.StorePageScreenViewModel
+@model Simplix.PortalClient.Application.Contracts.Portal.StorePageViewModel
 @{
     ViewData["Title"] = "Simplix Store";
     ViewData["ShellMode"] = "public";
-    bool leadCreated = TempData["StoreLeadCreated"] as bool? ?? false;
 }
 
 <section class="landing-hero">
     <div class="hero-copy hero-copy-main">
         <span class="eyebrow">Portal publico + Store</span>
-        <h1>@Model.Store.Title</h1>
-        <p class="hero-description hero-description-strong">@Model.Store.Subtitle</p>
+        <h1>@Model.Title</h1>
+        <p class="hero-description hero-description-strong">@Model.Subtitle</p>
         <div class="hero-actions">
-            <a class="btn btn-primary btn-lg" href="#lead-form">Quero falar com vendas</a>
+            <button type="button" class="btn btn-primary btn-lg" data-bs-toggle="modal" data-bs-target="#storeCommercialModal">
+                Quero falar com vendas
+            </button>
             <a class="btn btn-outline-light btn-lg" asp-action="Index">Voltar ao portal</a>
         </div>
         <div class="hero-signal-grid">
-            @foreach (var highlight in Model.Store.ValueHighlights)
+            @foreach (var highlight in Model.ValueHighlights)
             {
                 <article class="signal-card">
                     <span class="signal-icon"></span>
@@ -52,10 +53,10 @@
             <span class="section-kicker">Catalogo</span>
             <h2>Aplicativos apresentados com foco de venda</h2>
         </div>
-        <span>@Model.Store.Applications.Count aplicativo(s)</span>
+        <span>@Model.Applications.Count aplicativo(s)</span>
     </div>
     <div class="card-grid">
-        @foreach (var application in Model.Store.Applications)
+        @foreach (var application in Model.Applications)
         {
             <article class="product-card product-card-featured">
                 <span class="product-badge">@application.Category</span>
@@ -70,81 +71,18 @@
     </div>
 </section>
 
-<section class="section-block" id="lead-form">
-    <div class="section-heading">
-        <div>
-            <span class="section-kicker">Captura de interesse</span>
-            <h2>Transforme visita em conversa comercial</h2>
+<div class="modal fade" id="storeCommercialModal" tabindex="-1" aria-labelledby="storeCommercialModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content store-modal-content">
+            <div class="modal-header">
+                <h2 class="modal-title fs-5" id="storeCommercialModalLabel">Como voce quer seguir?</h2>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Fechar"></button>
+            </div>
+            <div class="modal-body store-modal-body">
+                <p>Escolha o canal para falar com a Simplix agora.</p>
+                <a class="btn btn-primary btn-lg" asp-action="CommercialInterest">Enviar interesse comercial</a>
+                <a class="btn btn-outline-primary btn-lg" asp-action="StoreChat">Falar no chat</a>
+            </div>
         </div>
-        <span>Sem depender de acesso ao portal</span>
     </div>
-
-    <div class="store-lead-layout">
-        <article class="workspace-card">
-            @if (leadCreated)
-            {
-                <div class="store-lead-success">
-                    <span class="tag">Lead registrado</span>
-                    <p>Recebemos seu interesse. O proximo passo agora e a equipe comercial entrar em contato.</p>
-                </div>
-            }
-
-            <form method="post" asp-action="CreateLead" class="auth-form">
-                @Html.AntiForgeryToken()
-                <div asp-validation-summary="ModelOnly" class="text-danger"></div>
-
-                <div class="store-lead-grid">
-                    <div>
-                        <label asp-for="LeadForm.ContactName" class="form-label"></label>
-                        <input asp-for="LeadForm.ContactName" class="form-control" />
-                        <span asp-validation-for="LeadForm.ContactName" class="text-danger"></span>
-                    </div>
-                    <div>
-                        <label asp-for="LeadForm.CompanyName" class="form-label"></label>
-                        <input asp-for="LeadForm.CompanyName" class="form-control" />
-                        <span asp-validation-for="LeadForm.CompanyName" class="text-danger"></span>
-                    </div>
-                    <div>
-                        <label asp-for="LeadForm.Email" class="form-label"></label>
-                        <input asp-for="LeadForm.Email" class="form-control" />
-                        <span asp-validation-for="LeadForm.Email" class="text-danger"></span>
-                    </div>
-                    <div>
-                        <label asp-for="LeadForm.Phone" class="form-label"></label>
-                        <input asp-for="LeadForm.Phone" class="form-control" />
-                        <span asp-validation-for="LeadForm.Phone" class="text-danger"></span>
-                    </div>
-                </div>
-
-                <div>
-                    <label asp-for="LeadForm.InterestedProduct" class="form-label"></label>
-                    <input asp-for="LeadForm.InterestedProduct" class="form-control" placeholder="Ex.: Simplix Finance" />
-                    <span asp-validation-for="LeadForm.InterestedProduct" class="text-danger"></span>
-                </div>
-
-                <div>
-                    <label asp-for="LeadForm.Message" class="form-label"></label>
-                    <textarea asp-for="LeadForm.Message" class="form-control" rows="6" placeholder="Descreva o contexto da empresa, o problema e o que voce espera da solucao."></textarea>
-                    <span asp-validation-for="LeadForm.Message" class="text-danger"></span>
-                </div>
-
-                <button type="submit" class="btn btn-primary btn-lg">Enviar interesse comercial</button>
-            </form>
-        </article>
-
-        <article class="workspace-card">
-            <span class="section-kicker">Como vamos usar</span>
-            <h2>Fluxo comercial inicial da camada publica</h2>
-            <ul>
-                <li>Identificar o produto ou processo com maior aderencia para o lead.</li>
-                <li>Priorizar contatos com base em contexto, urgencia e escopo informado.</li>
-                <li>Converter o interesse em atendimento comercial e proposta de implantacao.</li>
-            </ul>
-        </article>
-    </div>
-</section>
-
-@section Scripts {
-    <partial name="_ValidationScriptsPartial" />
-}
-
+</div>

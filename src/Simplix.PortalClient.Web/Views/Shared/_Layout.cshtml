@@ -17,7 +17,7 @@
 <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>@ViewData["Title"] - Simplix</title>
+    <title>@ViewData["Title"] - Simplix Platform</title>
     <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
     <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
 </head>
@@ -28,13 +28,7 @@
             <div class="container-fluid shell-width public-shell-width">
                 <div class="public-brand-cluster">
                     <a class="brand-mark brand-mark-public" asp-area="" asp-controller="Home" asp-action="Index">
-                        <span class="public-brand-symbol" aria-hidden="true">
-                            <span class="public-brand-symbol-base"></span>
-                            <span class="public-brand-symbol-layer public-brand-symbol-layer-back"></span>
-                            <span class="public-brand-symbol-layer public-brand-symbol-layer-front"></span>
-                            <span class="public-brand-symbol-dot"></span>
-                        </span>
-                        <span class="brand-public-name">Simplix</span>
+                        <img class="brand-logo-image brand-logo-image-public" src="~/images/Logo_SimplixPlataform_v01_transparent.png" asp-append-version="true" alt="Simplix Platform" />
                     </a>
                     <span class="public-brand-divider" aria-hidden="true"></span>
                     <strong class="public-brand-suite">Portal Client</strong>
@@ -60,13 +54,7 @@
         <header class="topbar">
             <div class="container-fluid shell-width">
                 <a class="brand-mark brand-mark-app" asp-area="" asp-controller="Home" asp-action="Index">
-                    <span class="brand-app-symbol" aria-hidden="true">
-                        <span class="brand-app-symbol-base"></span>
-                        <span class="brand-app-symbol-layer brand-app-symbol-layer-back"></span>
-                        <span class="brand-app-symbol-layer brand-app-symbol-layer-front"></span>
-                        <span class="brand-app-symbol-dot"></span>
-                    </span>
-                    <span class="brand-app-name">Simplix</span>
+                    <img class="brand-logo-image brand-logo-image-app" src="~/images/Logo_SimplixPlataform_v01_transparent.png" asp-append-version="true" alt="Simplix Platform" />
                 </a>
                 <div class="topbar-actions">
                     @if (User.Identity?.IsAuthenticated == true)
@@ -128,4 +116,3 @@
     @await RenderSectionAsync("Scripts", required: false)
 </body>
 </html>
-

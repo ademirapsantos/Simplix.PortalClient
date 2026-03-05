@@ -49,6 +49,16 @@ internal sealed class AdminWorkspaceService : IAdminWorkspaceService
         return viewModel;
     }
 
+    public Task<SystemUpdateTriggerResultViewModel> StartSystemUpdateAsync(CancellationToken cancellationToken)
+    {
+        return _updateServerClient.StartUpdateAsync(cancellationToken);
+    }
+
+    public Task<SystemUpdateRuntimeStatusViewModel> GetSystemUpdateRuntimeStatusAsync(CancellationToken cancellationToken)
+    {
+        return _updateServerClient.GetRuntimeStatusAsync(cancellationToken);
+    }
+
     private OpenClawStatusViewModel BuildOpenClawStatus()
     {
         string mode = _openClawOptions.EnableTicketAutomation ? "Integracao habilitada" : "Integracao preparada";
@@ -66,4 +76,3 @@ internal sealed class AdminWorkspaceService : IAdminWorkspaceService
             ]);
     }
 }
-

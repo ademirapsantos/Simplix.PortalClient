@@ -20,6 +20,7 @@ public static class InfrastructureServiceCollectionExtensions
         services.Configure<OpenClawOptions>(configuration.GetSection(OpenClawOptions.SectionName));
         services.Configure<UpdateServerOptions>(configuration.GetSection(UpdateServerOptions.SectionName));
         services.Configure<SeedUsersOptions>(configuration.GetSection(SeedUsersOptions.SectionName));
+        services.Configure<DatabaseInitializationOptions>(configuration.GetSection(DatabaseInitializationOptions.SectionName));
         services.Configure<PasswordResetOptions>(configuration.GetSection(PasswordResetOptions.SectionName));
 
         PasswordResetOptions passwordResetOptions =
@@ -80,10 +81,18 @@ public static class InfrastructureServiceCollectionExtensions
 
         services.ConfigureApplicationCookie(options =>
         {
+            CookieSecurePolicy cookieSecurePolicy = CookieSecurePolicy.Always;
+            string? cookieSecurePolicyValue = configuration["Authentication:CookieSecurePolicy"];
+            if (!string.IsNullOrWhiteSpace(cookieSecurePolicyValue) &&
+                Enum.TryParse(cookieSecurePolicyValue, ignoreCase: true, out CookieSecurePolicy parsedCookieSecurePolicy))
+            {
+                cookieSecurePolicy = parsedCookieSecurePolicy;
+            }
+
             options.Cookie.Name = "Simplix.PortalClient.Auth";
             options.Cookie.HttpOnly = true;
             options.Cookie.SameSite = SameSiteMode.Lax;
-            options.Cookie.SecurePolicy = CookieSecurePolicy.Always;
+            options.Cookie.SecurePolicy = cookieSecurePolicy;
             options.LoginPath = "/account/login";
             options.AccessDeniedPath = "/account/access-denied";
             options.ExpireTimeSpan = TimeSpan.FromHours(8);
@@ -109,4 +118,3 @@ public static class InfrastructureServiceCollectionExtensions
         return services;
     }
 }
-
