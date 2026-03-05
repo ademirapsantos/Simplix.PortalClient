@@ -1,8 +1,8 @@
 {
-  "version": "1.0.10-dev.ad312bc",
-  "latest_version": "1.0.10-dev.ad312bc",
-  "tag": "1.0.10-dev.ad312bc",
-  "commit": "ad312bc3a8b99cbcf1d5978b743e11bf66c22def",
-  "date": "2026-03-05T21:07:53Z",
+  "version": "1.0.11-dev.2cc5a46",
+  "latest_version": "1.0.11-dev.2cc5a46",
+  "tag": "1.0.11-dev.2cc5a46",
+  "commit": "2cc5a46854df33fb824fa4137ea5484539cdff5b",
+  "date": "2026-03-05T21:35:36Z",
   "environment": "dev"
 }
