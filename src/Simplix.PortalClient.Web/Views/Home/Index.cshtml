@@ -6,7 +6,7 @@
 <div class="marketing-page">
     <section class="marketing-hero" id="topo">
         <div class="marketing-hero-copy">
-            <span class="marketing-kicker">Ecossistema digital para operacao, licencas e relacionamento continuo</span>
+            <span class="marketing-kicker">Um ecossistema digital para gestão, vendas, estoque, financeiro, contabilidade e relacionamento com clientes, com possibilidade de automação de processos e integração com aplicações externas.</span>
             <h1>Transforme a primeira visita em uma experiencia comercial memoravel.</h1>
             <p class="marketing-hero-summary">@Model.CompanySummary</p>
             <p class="marketing-hero-support">@Model.AboutCompany</p>
@@ -24,21 +24,59 @@
             <div class="marketing-orbit marketing-orbit-back"></div>
             <div class="marketing-orbit marketing-orbit-front"></div>
             <div class="marketing-stage-card marketing-stage-card-main">
-                <span class="tag">Operacao conectada</span>
-                <h2>@Model.CompanyName</h2>
-                <p>Store publica, gestao comercial e area do cliente organizadas em uma unica experiencia.</p>
+                <span class="marketing-module-icon marketing-module-icon-vendas" aria-hidden="true">
+                    <svg viewBox="0 0 24 24" role="presentation" focusable="false">
+                        <path d="M4 18h16v2H4zM6 16V9h3v7zm5 0V6h3v10zm5 0v-4h3v4z"></path>
+                    </svg>
+                </span>
+                <span class="tag">Modulo</span>
+                <h2>Simplix Vendas</h2>
+                <p>Gestao comercial completa para controle de clientes, oportunidades, pedidos e relacionamento.</p>
             </div>
             <div class="marketing-floating-tile marketing-floating-tile-a">
-                <strong>Finance</strong>
-                <span>Licencas e cobrancas</span>
+                <span class="marketing-module-icon marketing-module-icon-financeiro" aria-hidden="true">
+                    <svg viewBox="0 0 24 24" role="presentation" focusable="false">
+                        <path d="M12 2a7 7 0 0 0 0 14h1a3 3 0 0 1 0 6h-1a7 7 0 0 1-6.9-5.9h3A4 4 0 0 0 12 19h1a3 3 0 0 0 0-6h-1a7 7 0 0 1 0-14h1a7 7 0 0 1 6.9 5.9h-3A4 4 0 0 0 13 5z"></path>
+                    </svg>
+                </span>
+                <strong>Simplix Financeiro</strong>
+                <span>Controle financeiro com contas a pagar, contas a receber, fluxo de caixa e organização das movimentações.</span>
             </div>
             <div class="marketing-floating-tile marketing-floating-tile-b">
-                <strong>Service Desk</strong>
-                <span>Chamados e suporte</span>
+                <span class="marketing-module-icon marketing-module-icon-contabilidade" aria-hidden="true">
+                    <svg viewBox="0 0 24 24" role="presentation" focusable="false">
+                        <path d="M3 4h18v3H3zm2 5h6v11H5zm8 0h6v2h-6zm0 4h6v2h-6zm0 4h6v2h-6z"></path>
+                    </svg>
+                </span>
+                <strong>Simplix Contabilidade</strong>
+                <span>Estrutura contábil integrada para controle patrimonial, balancetes e organização financeira do negócio.</span>
             </div>
             <div class="marketing-floating-tile marketing-floating-tile-c">
-                <strong>Sales Cloud</strong>
-                <span>Relacionamento comercial</span>
+                <span class="marketing-module-icon marketing-module-icon-estoque" aria-hidden="true">
+                    <svg viewBox="0 0 24 24" role="presentation" focusable="false">
+                        <path d="M3 7l9-4 9 4-9 4zm0 3l9 4 9-4v7l-9 4-9-4z"></path>
+                    </svg>
+                </span>
+                <strong>Simplix Estoque</strong>
+                <span>Gestão de produtos, controle de estoque, movimentações e organização de inventário.</span>
+            </div>
+            <div class="marketing-floating-tile marketing-floating-tile-d">
+                <span class="marketing-module-icon marketing-module-icon-service-desk" aria-hidden="true">
+                    <svg viewBox="0 0 24 24" role="presentation" focusable="false">
+                        <path d="M12 3a8 8 0 0 0-8 8v5a3 3 0 0 0 3 3h2v-6H6v-2a6 6 0 1 1 12 0v2h-3v6h2a3 3 0 0 0 3-3v-5a8 8 0 0 0-8-8"></path>
+                    </svg>
+                </span>
+                <strong>Simplix Service Desk</strong>
+                <span>Central de atendimento para suporte, registro de chamados e relacionamento com clientes.</span>
+            </div>
+            <div class="marketing-floating-tile marketing-floating-tile-e">
+                <span class="marketing-module-icon marketing-module-icon-integracoes" aria-hidden="true">
+                    <svg viewBox="0 0 24 24" role="presentation" focusable="false">
+                        <path d="M8 6a3 3 0 1 1 0 6H6v2h2a3 3 0 1 1 0 6H4v-2h4a1 1 0 0 0 0-2H6a3 3 0 1 1 0-6h2a1 1 0 0 0 0-2H4V6zm12 0v2h-4a1 1 0 0 0 0 2h2a3 3 0 1 1 0 6h-2a1 1 0 0 0 0 2h4v2h-4a3 3 0 1 1 0-6h2a1 1 0 0 0 0-2h-2a3 3 0 1 1 0-6z"></path>
+                    </svg>
+                </span>
+                <strong>Simplix Integracoes e Processos</strong>
+                <span>Integração com aplicações externas e possibilidade de adicionar novos processos à plataforma.</span>
             </div>
         </aside>
     </section>
@@ -55,19 +93,28 @@
     <section class="marketing-section" id="beneficios">
         <div class="marketing-section-heading">
             <div>
-                <span class="section-kicker">Por que a Simplix</span>
-                <h2>Uma apresentacao comercial que convida o cliente a continuar navegando.</h2>
+                <span class="section-kicker">Desenvolvemos soluções digitais que ajudam empresas, comércios, prestadores de serviço e profissionais autônomos a organizar suas operações, automatizar processos e crescer com mais controle e eficiência.</span>
+                <h2>Simplix Platform — tecnologia simples para negócios inteligentes.</h2>
             </div>
-            <p>O objetivo da pagina inicial e apresentar valor, portfolio e proximos passos com uma linguagem muito mais comercial do que tecnica.</p>
+            <p>A Simplix Platform foi criada para transformar ideias em soluções reais. Nosso objetivo é desenvolver aplicações modernas que ajudem empresas a organizar processos, melhorar a gestão e ganhar produtividade através da tecnologia. Mais do que sistemas, entregamos plataformas pensadas para evoluir junto com o crescimento do cliente.</p>
         </div>
         <div class="marketing-benefit-grid">
-            @foreach (var highlight in Model.Highlights)
-            {
-                <article class="marketing-benefit-card">
-                    <span class="marketing-benefit-index"></span>
-                    <p>@highlight</p>
-                </article>
-            }
+            <article class="marketing-benefit-card">
+                <span class="marketing-benefit-index"></span>
+                <p>Experiência simplificada. Nossa página inicial apresenta nossas soluções de forma clara e acessível, permitindo que clientes conheçam nossos produtos e descubram como a tecnologia pode ajudar seus negócios.</p>
+            </article>
+            <article class="marketing-benefit-card">
+                <span class="marketing-benefit-index"></span>
+                <p>Store de soluções. A Simplix oferece aplicações desenvolvidas para resolver necessidades reais do mercado, disponibilizadas através de licenciamento simples e escalável.</p>
+            </article>
+            <article class="marketing-benefit-card">
+                <span class="marketing-benefit-index"></span>
+                <p>Portal do cliente. Clientes possuem acesso a um portal exclusivo para gerenciar licenças, acessar atualizações, suporte e acompanhar a evolução das soluções contratadas.</p>
+            </article>
+            <article class="marketing-benefit-card">
+                <span class="marketing-benefit-index"></span>
+                <p>Gestão centralizada. A plataforma possui um painel administrativo que permite gerenciar clientes, licenças, usuários e suporte de forma organizada e segura.</p>
+            </article>
         </div>
     </section>
 
@@ -166,4 +213,3 @@
         </div>
     </section>
 </div>
-
