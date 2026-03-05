@@ -46,7 +46,7 @@ fi
 
 tar czf - compose infra/docker/update-service | ssh -o StrictHostKeyChecking=no -p "$REMOTE_PORT" "$REMOTE_USER@$REMOTE_HOST" "
   mkdir -p '$REMOTE_PATH' &&
-  tar xzf - -C '$REMOTE_PATH'
+  tar xzf - --overwrite --no-same-owner --no-same-permissions -C '$REMOTE_PATH'
 "
 
 ssh -o StrictHostKeyChecking=no -p "$REMOTE_PORT" "$REMOTE_USER@$REMOTE_HOST" "
