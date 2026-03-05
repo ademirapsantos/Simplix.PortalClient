@@ -1,8 +1,8 @@
 {
-  "version": "1.0.6-dev.1fd30e1",
-  "latest_version": "1.0.6-dev.1fd30e1",
-  "tag": "1.0.6-dev.1fd30e1",
-  "commit": "1fd30e11f9cf00a78eff8b764cbb0e0c16a399ce",
-  "date": "2026-03-05T18:12:44Z",
+  "version": "1.0.7-dev.74cd3b7",
+  "latest_version": "1.0.7-dev.74cd3b7",
+  "tag": "1.0.7-dev.74cd3b7",
+  "commit": "74cd3b7fb1b8ef5f99459af4268dcd205dc991b7",
+  "date": "2026-03-05T18:53:55Z",
   "environment": "dev"
 }
