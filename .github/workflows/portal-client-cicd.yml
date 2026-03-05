@@ -70,6 +70,8 @@ jobs:
       - uses: actions/checkout@v4
 
       - uses: actions/setup-dotnet@v4
+        env:
+          DOTNET_INSTALL_DIR: /home/actions/.dotnet
         with:
           dotnet-version: 9.0.x
 
